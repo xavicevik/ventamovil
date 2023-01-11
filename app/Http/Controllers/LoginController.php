@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Actions\Fortify\PasswordValidationRules;
 use App\Models\Cliente;
+use App\Models\Departamento;
+use App\Models\Localidad;
 use App\Models\Puntoventa;
 use App\Models\User;
 use App\Models\Vendedor;
@@ -11,9 +13,12 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
+use Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable;
+use Laravel\Fortify\Features;
 use Symfony\Component\Console\Input\Input;
 use Laravel\Fortify\Contracts\UpdatesUserPasswords;
 
@@ -31,204 +36,57 @@ class LoginController extends Controller
     public function index()
     {
         $token = csrf_token();
-        return Inertia::render('Auth/Logincustom', [
+        $arrayDepartamentos = Departamento::all();
+
+        return Inertia::render('Auth/Login', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
-            '_token' => $token
+            '_token' => $token,
+            'arrayDepartamentos' => $arrayDepartamentos
         ]);
     }
 
-    public function indexVendedor()
-    {
-        $token = csrf_token();
-        return Inertia::render('Auth/Loginvendedor', [
-            'canLogin' => Route::has('login'),
-            'canRegister' => Route::has('register'),
-            '_token' => $token
-        ]);
-    }
 
     public function authenticate(Request $request)
     {
         $token = csrf_token();
-        $credentials = $request->validate([
-            'username' => ['required'],
-            'password' => ['required'],
-        ],
-            [
-                'password.required' => 'El password no cumple con las políticas establecidas'
-            ]);
-        $roluser = User::where('username', $credentials['username'])
-                         ->select('id', 'username', 'password', 'idrol', 'changedpassword', 'idempresa');
 
-        $rol = $roluser->first();
+        //$macAddr = exec('getmac');
+        //dd(substr($macAddr,0,17));
+        $IMEI = '1234567890';
 
-        if (! is_null($rol) && is_null($rol->changedpassword)) {
-            /*
-            return redirect()->route('changepass.index', [
-                'puntoventas' => $rol['empresa']['puntosventa'],
-                'username' => $request->username,
-                'password' => $request->password,
-                '_token' => $token
+        $url = config('edatel.serviceurl');
+        $response = Http::withOptions(['verify' => false,])
+            ->asForm()
+            ->post($url, [
+                "ListaVal" => 'v4l1d4Usu4r10',
+                "Vendedor" => $request->Vendedor,
+                "Identificacion" => $request->Identificacion,
+                "IMEI" => $IMEI
             ]);
 
-            */
-            return Inertia::render('Auth/Cambiarpassword', [
-                'puntoventas' => empty($puntosventa)?[]:$puntosventa,
-                'username' => $request->username,
-                'password' => $request->password,
-                '_token' => $token
-            ]);
+        if ($response->body() != '0/') {
+            return back()->withErrors([
+                'username' => 'Error '.$response->body(),
+            ])->onlyInput('username');
+        } else {
+
         }
+        $user = User::where('id', 1)->first();
+        Auth::login($user);
+        Auth::login($user, true);
 
-        $guard = Auth::guard('web');
-        if ($guard->attempt($credentials, ($request->remember == 'on') ? true : false)) {
-            $request->session()->regenerate();
-            return redirect()->intended('main.index');
-        }
+        $localidad = Localidad::where('CODIGO', $request->localidad)->first();
 
-        return back()->withErrors([
-            'username' => 'Las credenciales ingresadas no corresponden con un usuario registrado',
-        ])->onlyInput('username');
-    }
-
-    public function authenticatevendedor(Request $request)
-    {
-        $credentials = $request->validate([
-            'username' => ['required'],
-            'password' => ['required'],
-        ]);
-
-        if (Auth::guard('vendedor')->attempt($credentials, ($request->remember == 'on') ? true : false)) {
-            $request->session()->regenerate();
-            $request->session()->push('puntodeventa', $request['puntodeventa']);
-
-            return redirect()->intended('dashboard');
-        }
-
-        return back()->withErrors([
-            'username' => 'Las credenciales ingresadas no corresponden con un usuario registrado',
-        ])->onlyInput('username');
-    }
-
-    public function changePassword(Request $request)
-    {
-        $token = csrf_token();
-        return Inertia::render('Auth/Cambiarpassword', [
-            'canLogin' => Route::has('login'),
-            'canRegister' => Route::has('register'),
-            '_token' => $token
-        ]);
-    }
-
-
-    /**
-     * Validate and update the user's password.
-     *
-     * @param  mixed  $user
-     * @param  array  $input
-     * @return void
-     */
-    public function updatePassword(Request $request)
-    {
-        $mytime= Carbon::now('America/Bogota');
-        $input = $request;
-
-        $roluser = User::where('username', $input->username)
-            ->with('empresa.puntosventa')
-            ->select('id', 'username', 'password', 'idrol', 'changedpassword');
-
-        $user = $roluser->first();
-
-        Validator::make($request->all(), [
-            'current_password' => ['required', 'string'],
-            'password' => $this->passwordRules(),
-        ],
-            [
-                'password.required' => 'Ingrese el password',
-                'password.confirmed' => 'El password no es igual a su confirmación'
-            ]
-        )->after(function ($validator) use ($user, $input) {
-            if (! isset($input->current_password) ) {
-                $validator->errors()->add('current_password', __('Debe ingresar el password actual.'));
-            }
-            if ( Hash::check($input->password, $user->password)) {
-                $validator->errors()->add('password', __('El password actual no puede ser igual al anterior'));
-            }
-        })->validateWithBag('updatePassword');
-
-        $user->forceFill([
-            'password' => Hash::make($input->password),
-            'changedpassword' => $mytime->toDateString()
-        ])->save();
-
-        return redirect()->back()
-            ->with('message', 'Se cambió la contraseña');
-        //return redirect()->route('login');
-    }
-
-    public function updatePasswordsu(Request $request)
-    {
-        $mytime= Carbon::now('America/Bogota');
-        $input = $request;
-
-        $user = User::where('id', $input->id)->first();
-
-
-        Validator::make($request->all(), [
-            'password' => $this->passwordRules(),
-        ],
-            [
-                'password.required' => 'Ingrese un password',
-                'password.confirmed' => 'El password no es igual'
-            ]
-        )->validateWithBag('updatePassword');
-
-        $user->forceFill([
-            'password' => Hash::make($input->password),
-            'changedpassword' => $mytime->toDateString()
-        ])->save();
-
-        return redirect()->back()->with('message', 'Se cambia contraseña');
-    }
-
-    // APP Movil
-    public function indexapp()
-    {
-        $token = csrf_token();
-        return Inertia::render('Auth/Loginapp', [
-            'canLogin' => Route::has('login'),
-            'canRegister' => Route::has('register'),
-            '_token' => $token
-        ]);
-    }
-
-    public function authenticateapp(Request $request)
-    {
-        $credentials = $request->validate([
-            'username' => ['required'],
-            'password' => ['required'],
-        ]);
-
-        if (Auth::guard('vendedor')->attempt($credentials, ($request->remember == 'on') ? true : false)) {
-            $request->session()->regenerate();
-            $request->session()->push('puntodeventa', 2);
-
-            return redirect()->intended('/app/ventas');
-        }
-
-        return back()->withErrors([
-            'username' => 'Las credenciales ingresadas no corresponden con un usuario registrado',
-        ])->onlyInput('username');
-    }
-
-    public function authenticatelink(Request $request, Vendedor $vendedor)
-    {
-        Auth::guard('vendedor')->login($vendedor, $remember = true);
         $request->session()->regenerate();
-        $request->session()->push('puntodeventa', 2);
-
-        return redirect()->intended('/app/ventas');
+        $request->session()->push('Vendedor', $request->Vendedor);
+        $request->session()->push('Identificacion', $request->Identificacion);
+        $request->session()->push('IMEI', $IMEI);
+        $request->session()->push('departamento', $request->departamento);
+        $request->session()->push('localidad', $request->localidad);
+        $request->session()->push('localidaddesc', $localidad->DESCRIPCION);
+        return redirect()->intended('main');
     }
+
 
 }

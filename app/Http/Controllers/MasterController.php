@@ -2,20 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Barrio;
 use App\Models\Boleta;
+use App\Models\Departamento;
 use App\Models\Empresa;
+use App\Models\Localidad;
 use App\Models\Loteria;
 use App\Models\Pais;
+use App\Models\Restriccion;
 use App\Models\Rol;
+use App\Models\Segmentos;
 use App\Models\Serie;
 use App\Models\Terminosycondiciones;
+use App\Models\TiposCliente;
 use App\Models\TiposDocumento;
 use App\Models\User;
 use App\Models\Vendedor;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -23,13 +31,98 @@ use Spatie\Permission\Models\Role;
 class MasterController extends Controller
 {
     const canPorPagina = 10;
+    protected $url = null;
+
+    public function __construct() {
+        $this->url = config('edatel.serviceurl');
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
+    public function getTiposdocumento(Request $request)
+    {
+        /*
+        $response = Http::withOptions(['verify' => false,])
+            ->asForm()
+            ->post($this->url, [
+                "ListaVal" => 'l1574_71p0id3n7'
+            ]);
+
+        return ['data' => $response->json(), 'status' => $response->status()];
+        */
+
+        $datos = TiposDocumento::where('estado', 1)->get();
+        return ['data' => $datos];
+    }
+
+    public function getTipoCliente(Request $request)
+    {
+        /*
+        $response = Http::withOptions(['verify' => false,])
+            ->asForm()
+            ->post($this->url, [
+                "ListaVal" => 'Li574_71p0Cl13n7e'
+            ]);
+
+        return ['data' => $response->json(), 'status' => $response->status()];
+        */
+        $datos = TiposCliente::where('estado', 1)->get();
+        return ['data' => $datos];
+    }
+
+    public function getSegmentos(Request $request)
+    {
+        /*
+        $response = Http::withOptions(['verify' => false,])
+            ->asForm()
+            ->post($this->url, [
+                "ListaVal" => 'l1574_S36M3nT4c1oNCl13nte'
+            ]);
+
+        return ['data' => $response->json(), 'status' => $response->status()];
+        */
+        $datos = Segmentos::where('estado', 1)->get();
+        return ['data' => $datos];
+    }
+
+    public function getRestricciones(Request $request)
+    {
+        $datos = Restriccion::where('estado', 1)->get();
+        return ['data' => $datos];
+    }
+
+
+    public function getDepartamentos(Request $request)
+    {
+        $datos = Departamento::where('estado', 1)->get();
+        return ['data' => $datos];
+    }
+
+    public function getLocalidadDepartamento(Request $request)
+    {
+        $datos = Localidad::where('ID_PADRE', $request->departamento)->get();
+        return ['data' => $datos];
+    }
+
+    public function getBarrioLocalidad(Request $request)
+    {
+        $localidad = $request->session()->get('localidad');
+        $datos = Barrio::where('ID_PADRE', $localidad[0])->get();
+
+        return ['data' => $datos];
+    }
+
+
+
+
+
+
+
+
     public function rolesIndex(Request $request)
-{
+    {
     $buscar = $request->buscar;
     if ($request->has('sortBy') && $request->sortBy <> ''){
         $sortBy = $request->sortBy;
@@ -244,37 +337,7 @@ class MasterController extends Controller
         }
     }
 
-    public function tipodocIndex(Request $request)
-    {
-        //if (!$request->ajax()) return redirect('/');
-        $buscar = $request->buscar;
-        if ($request->has('sortBy') && $request->sortBy <> ''){
-            $sortBy = $request->sortBy;
-        } else {
-            $sortBy = 'id';
-        }
 
-        if ($request->has('sortOrder') && $request->sortOrder <> ''){
-            $sortOrder = $request->sortOrder;
-        } else {
-            $sortOrder = 'desc';
-        }
-
-        if ($buscar == ''){
-            $tipos = TiposDocumento::orderBy($sortBy, $sortOrder)
-                ->paginate(self::canPorPagina);
-        } else {
-            $tipos = TiposDocumento::orderBy($sortBy, $sortOrder)
-                ->where('nombre', 'like', '%'. $buscar . '%')
-                ->paginate(self::canPorPagina);
-        }
-
-        if ($request->has('ispage') && $request->ispage){
-            return ['data' => $tipos];
-        } else {
-            return Inertia::render('Masters/TipodocIndex', ['data' => $tipos]);
-        }
-    }
 
     public function terminosIndex(Request $request)
     {

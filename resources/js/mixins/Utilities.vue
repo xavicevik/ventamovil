@@ -26,7 +26,23 @@ export default {
             arrayDepartamentos: [],
             arrayCiudades: [],
             arrayRoles: [],
+
+
             arrayTiposdocumento: [],
+            arrayTiposclientes: [],
+            arraySegmentos: [],
+            arrayBarrios:[],
+            arrayCiclos: [],
+            arrayEstratos: [],
+            arrayTecnologias: [],
+            arrayRestricciones: [],
+            arrayPlanesComVoz: [],
+            arrayPlanesComTv: [],
+            arrayPlanesComInternet: [],
+            arrayPlanesVentaVoz: [],
+            arrayPlanesVentaInternet: [],
+            arrayPlanesVentaTv: [],
+
             arrayEmpresas: [],
             editMode: false,
             verMode: false,
@@ -115,16 +131,6 @@ export default {
         dateTimeFull(value) {
             return moment(value).format('YYYY-MM-DD HH:MM:SS');
         },
-        getLoterias: function () {
-            axios.get('/loterias',).then((res) => {
-                this.arrayLoterias = res.data.loterias;
-            })
-        },
-        getTerminos: function () {
-            axios.get('/terminos',).then((res) => {
-                this.arrayTerminos = res.data.terminos;
-            })
-        },
         getPaises: function () {
             axios.get('/paises',).then((res) => {
                 this.arrayPaises = res.data.paises;
@@ -158,18 +164,65 @@ export default {
                 this.arrayCiudades = res.data.ciudades;
             })
         },
-        getTiposdocumento: function () {
-            axios.get('/master/tiposdocsearch',).then((res) => {
-                this.arrayTiposdocumento = res.data.data;
-            })
+        // Selección de listas de VentaMovil
+        getTiposdocumento: async function () {
+            console.log('consultar tipo identificación');
+            let res;
+            try {
+                res = await axios.get('/master/getTiposdocumento');
+            } catch (error) {
+                console.log(error);
+                return false;
+            }
+            console.log(res.data.data);
+            this.arrayTiposdocumento = res.data.data;
         },
-        getRoles: async function () {
-            var url= '/master/getRoles';
-            axios.get(url).then((res) => {
-                var respuesta = res.data;
-                this.arrayRoles = respuesta.data;
-            })
+        getTipoCliente: async function () {
+            console.log('consultar tipo cliente');
+            let res;
+            try {
+                res = await axios.get('/master/getTipoCliente');
+            } catch (error) {
+                console.log(error);
+                return false;
+            }
+            console.log(res.data.data);
+            this.arrayTiposclientes = res.data.data;
         },
+        getSegmentos: async function () {
+            console.log('consultar segmentos');
+            let res;
+            try {
+                res = await axios.get('/master/getSegmentos');
+            } catch (error) {
+                console.log(error);
+                return false;
+            }
+            console.log(res.data.data);
+            this.arraySegmentos = res.data.data;
+        },
+        getBarrioLocalidad: async function (localidad) {
+            console.log('consultar barrios');
+            let res;
+            try {
+                res = await axios.get('/master/getBarrioLocalidad', {
+                    params: {
+                        Filtro: localidad
+                    }
+                });
+            } catch (error) {
+                console.log(error);
+                return false;
+            }
+            console.log(res.data.data);
+            this.arrayBarrios = res.data.data;
+        },
+
+
+
+
+
+
         getClientes: async function (buscar = '', filtro = 'documento', paginate = false) {
             var url= '/users/getClientesActivos';
             axios.get(url, {
@@ -357,7 +410,7 @@ export default {
 
         },
         cleanMessage: function () {
-            this.$page.props.flash.message = '';
+            this.errorcreacion = '';
         },
         sendSMS: function (id) {
             axios.get('/ventas/sendSmsSales?id='+id,).then((res) => {

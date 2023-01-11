@@ -31,22 +31,9 @@ Route::group(['middleware'=>['guest']],function(){
     Route::get('/', [LoginController::class, 'index'])->name('login.index');
     Route::post('/', [LoginController::class, 'authenticate'])->name('login.authenticate');
 
-    Route::get('/app', [LoginController::class, 'indexApp'])->name('loginapp.index');
-    Route::post('/app', [LoginController::class, 'authenticateapp'])->name('loginapp.authenticate');
+    Route::get('/master/getDepartamentos', [MasterController::class, 'getDepartamentos'])->name('master.getDepartamentos');
+    Route::get('/master/getLocalidadDepartamento', [MasterController::class, 'getLocalidadDepartamento'])->name('master.getLocalidadDepartamento');
 
-    Route::get('/loginvendedor', [LoginController::class, 'indexVendedor'])->name('loginvendedor.index');
-    Route::post('/loginvendedor', [LoginController::class, 'authenticatevendedor'])->name('loginvendedor.authenticate');
-
-    Route::get('/changepass', [LoginController::class, 'changePassword'])->name('changepass.index');
-    Route::post('/changepass', [LoginController::class, 'updatePassword'])->name('changepass.update');
-
-    //Enlace QR para la venta del usuario
-    //Route::get('/app/authenticatelink/{vendedor}', [LoginController::class, 'authenticatelink'])->name('ventas.authenticatelink');
-    Route::get('/app/authenticatelink/{vendedor}', [VentaController::class, 'createappp'])->name('ventas.authenticatelink');
-
-    Route::get('/ventas/sumary', [VentaController::class, 'sumary'])->name('sumary');
-    Route::post('/app/ventas/paynotify', [VentaController::class, 'paynotify'])->name('paynotify');
-    Route::get('/app/ventas/paynotify', [VentaController::class, 'paynotify'])->name('paynotify');
 
 });
 
@@ -54,8 +41,33 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified',]
     // Tigo UNE
     Route::get('/main', [PrincipalController::class, 'index'])->name('main.index');
     Route::get('/cliente', [ClienteController::class, 'index'])->name('cliente.index');
-    Route::get('/cliente/crear', [ClienteController::class, 'crear'])->name('cliente.crear');
-    Route::post('/cliente', [ClienteController::class, 'store'])->name('cliente.store');
+    Route::get('/cliente.crear', [ClienteController::class, 'create'])->name('cliente.create');
+    Route::post('/cliente/store', [ClienteController::class, 'store'])->name('cliente.store');
+    Route::get('/cliente/store', [ClienteController::class, 'store'])->name('cliente.store');
+    Route::get('/master/getTiposdocumento', [MasterController::class, 'getTiposdocumento'])->name('master.getTiposdocumento');
+    Route::get('/master/getTipoCliente', [MasterController::class, 'getTipoCliente'])->name('master.getTipoCliente');
+    Route::get('/master/getSegmentos', [MasterController::class, 'getSegmentos'])->name('master.getSegmentos');
+    Route::get('/master/getRestricciones', [MasterController::class, 'getRestricciones'])->name('master.getRestricciones');
+
+    Route::get('/cliente/getCliente', [ClienteController::class, 'getCliente'])->name('master.getCliente');
+    Route::get('/master/getBarrioLocalidad', [MasterController::class, 'getBarrioLocalidad'])->name('master.getBarrioLocalidad');
+    Route::post('/direccion/storeDirInsta', [VentaController::class, 'storeDirInsta'])->name('direccion.storeDirInsta');
+    Route::get('/direccion/storeDirInsta', [VentaController::class, 'storeDirInsta'])->name('direccion.storeDirInsta');
+
+
+    //Route::get('/master/getDepartamentos', [MasterController::class, 'getDepartamentos'])->name('master.getDepartamentos');
+    //Route::get('/master/getLocalidadDepartamento', [MasterController::class, 'getLocalidadDepartamento'])->name('master.getLocalidadDepartamento');
+
+    // Registro de venta
+    Route::get('/venta', [VentaController::class, 'index'])->name('venta.index');
+    Route::get('/venta.crear', [VentaController::class, 'create'])->name('venta.create');
+    Route::post('/venta/store', [VentaController::class, 'store'])->name('venta.store');
+    Route::get('/venta/store', [VentaController::class, 'store'])->name('venta.store');
+    Route::get('/venta/getCliente', [VentaController::class, 'getCliente'])->name('venta.getCliente');
+    Route::get('/venta/getComercialPlan', [VentaController::class, 'getComercialPlan'])->name('venta.getComercialPlan');
+    Route::get('/venta/getSalesPlan', [VentaController::class, 'getSalesPlan'])->name('venta.getSalesPlan');
+
+
 
 
     //TIgo UNE
@@ -167,7 +179,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified',]
     Route::get('/master/empresas', [MasterController::class, 'empresasIndex'])->name('master.empresas');
     Route::get('/master/series', [MasterController::class, 'seriesIndex'])->name('master.series');
     Route::get('/master/terminos', [MasterController::class, 'terminosIndex'])->name('master.terminos');
-    Route::get('/master/tiposdoc', [MasterController::class, 'tipodocIndex'])->name('master.tiposdoc');
+
     Route::get('/master/puntoventas', [PuntoventaController::class, 'index'])->name('master.puntosventa');
     Route::get('/master/tiposdoc', [MasterController::class, 'tipodocIndex'])->name('master.tiposdoc');
     Route::get('/master/tiposdocsearch', [MasterController::class, 'tipodocSearch'])->name('master.tiposdocsearch');

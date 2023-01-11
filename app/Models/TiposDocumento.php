@@ -8,11 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class TiposDocumento extends Model
 {
     protected $table = 'tipos_documentos';
-    protected $fillable = ['nombre','nombre_corto','estado'];
-    public $timestamps = false;
+    protected $fillable = ['CODIGO', 'DESCRIPCION','estado'];
 
-    public function users()
-    {
-        return $this->hasMany('App\Models\User');
-    }
 }

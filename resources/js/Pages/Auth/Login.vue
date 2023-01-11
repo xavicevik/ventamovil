@@ -7,51 +7,103 @@ import JetInput from '@/Jetstream/Input.vue';
 import JetCheckbox from '@/Jetstream/Checkbox.vue';
 import JetLabel from '@/Jetstream/Label.vue';
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
+import { usePage } from '@inertiajs/inertia-vue3'
+import Input from "../../Jetstream/Input";
+import NavLink from "../../Jetstream/NavLink";
+import Button from "../../Jetstream/Button";
+import {Icon} from "@iconify/vue/dist/iconify";
+import Toggle from "@vueform/toggle";
+import {QuillEditor} from "@vueup/vue-quill";
+import {Money3Component} from "v-money3";
+import Swal from "sweetalert2";
 
 defineProps({
     canResetPassword: Boolean,
     status: String,
+    arrayDepartamentos: [],
+    _token: String,
 });
 
 const form = useForm({
-    username: '',
-    password: '',
-    remember: false,
+    Vendedor: '',
+    Identificacion: '',
+    departamento: 0,
+    localidad: 0,
+    _token: usePage().props.value._token,
 });
 
 const submit = () => {
     form.transform(data => ({
         ...data,
         remember: form.remember ? 'on' : '',
-    })).post(route('login'), {
-        onFinish: () => form.reset('password'),
+    })).post(route('login.authenticate'), {
+        onFinish: () => form.reset('IMEI'),
     });
 };
+
+</script>
+
+<script>
+
+export default {
+    data() {
+        return {
+            arrayLocalidades: []
+        }
+    },
+    methods: {
+        getLocalidadDepartamento: async function (departamento) {
+            let url = '/master/getLocalidadDepartamento';
+            var res = await axios.get(url, {
+                params: {
+                    departamento: departamento,
+                }
+            });
+            console.log(res);
+            let respuesta = res.data;
+            this.arrayLocalidades = respuesta.data;
+        }
+    },
+}
 </script>
 
 <template>
     <Head title="Log in" />
 
-    <JetAuthenticationCard>
+    <JetAuthenticationCard class="text-sm lg:text-md">
         <template #logo>
             <JetAuthenticationCardLogo />
         </template>
 
         <JetValidationErrors class="mb-4" />
 
-        <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
-            {{ status }}
+        <div mx-auto class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md my-3" role="alert" v-show="$page.props.flash.message">
+            <div class="flex">
+                <div>
+                    <p class="text-sm">{{ $page.props.flash.message }}</p>
+                </div>
+            </div>
         </div>
 
         <form @submit.prevent="submit">
-            <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>" />
+            <div>
+                <JetLabel for="Vendedor" value="Codigo de vendedor" />
+                <JetInput
+                    id="Vendedor"
+                    v-model="form.Vendedor"
+                    type="number"
+                    class="mt-1 block w-full"
+                    required
+                    autofocus
+                />
+            </div>
 
             <div>
-                <JetLabel for="username" value="Nombre de Usuario" />
+                <JetLabel for="Identificacion" value="Identificación" />
                 <JetInput
-                    id="username"
-                    v-model="form.username"
-                    type="text"
+                    id="Identificacion"
+                    v-model="form.Identificacion"
+                    type="number"
                     class="mt-1 block w-full"
                     required
                     autofocus
@@ -59,30 +111,26 @@ const submit = () => {
             </div>
 
             <div class="mt-4">
-                <JetLabel for="password" value="Password" />
-                <JetInput
-                    id="password"
-                    v-model="form.password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    required
-                    autocomplete="current-password"
-                />
+                <JetLabel for="departamento" value="Departamento" />
+
+                <select @click="getLocalidadDepartamento(form.departamento)" class="block w-full rounded-lg text-gray-700 text-sm" required v-model="form.departamento">
+                    <option value="0" >Seleccione el departamento</option>
+                    <option v-for="opcion in arrayDepartamentos" :key="opcion.CODIGO" :value="opcion.CODIGO" v-text="opcion.DESCRIPCION"></option>
+                </select>
             </div>
 
-            <div class="block mt-4">
-                <label class="flex items-center">
-                    <JetCheckbox v-model:checked="form.remember" name="remember" />
-                    <span class="ml-2 text-sm text-gray-600">Recordarme</span>
-                </label>
+            <div class="mt-4">
+                <JetLabel for="localidad" value="Localidad" />
+
+                <select class="block w-full rounded-lg text-gray-700 text-sm" required v-model="form.localidad">
+                    <option value="0" >Seleccione una localidad</option>
+                    <option v-for="opcion in arrayLocalidades" :key="opcion.CODIGO" :value="opcion.CODIGO" v-text="opcion.DESCRIPCION"></option>
+                </select>
             </div>
 
             <div class="flex items-center justify-end mt-4">
-                <Link v-if="canResetPassword" :href="route('password.request')" class="underline text-sm text-gray-600 hover:text-gray-900 mx-4">
-                    Olvidó el passsword?
-                </Link>
 
-                <JetButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                <JetButton class="mx-auto text-red-white bg-red-700" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                     Ingresar
                 </JetButton>
             </div>
