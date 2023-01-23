@@ -55,8 +55,8 @@ class ClienteController extends Controller
         return [
             'data' => $response->json(),
             'status' => $response->status(),
-            'segmento' => $segmento?$segmento->DESCRIPCION:'',
-            'tipocliente' => $tipocliente?$tipocliente->DESCRIPCION:''
+            'segmento' => valTrue($segmento)?$segmento->DESCRIPCION:'',
+            'tipocliente' => valTrue($tipocliente)?$tipocliente->DESCRIPCION:''
             ];
     }
     /**
@@ -105,4 +105,64 @@ class ClienteController extends Controller
 
         return ['id' => $idcliente, 'identificacion' => $identificacion, 'codigo' => $codigo, 'mensaje' => $mensaje];
     }
+
+    public function getContrato(Request $request)
+    {
+        $url = config('edatel.serviceurl');
+        $response = Http::withOptions(['verify' => false,])
+            ->asForm()
+            ->post($url, [
+                "ListaVal" => 'l1574_C0nt4V3l',
+                "Filtro" => $request->contrato
+            ]);
+
+        return [
+            'data' => $response->json(),
+            'contrato' => $response->json([0]),
+            'status' => $response->status()
+        ];
+    }
+
+    public function getContratoProd(Request $request)
+    {
+        $url = config('edatel.serviceurl');
+        $response = Http::withOptions(['verify' => false,])
+            ->asForm()
+            ->post($url, [
+                "ListaVal" => 'c0nsult4Pr0d',
+                "Filtro" => $request->contrato
+            ]);
+
+        $first = $response->collect()->first();
+        $voz = $response->collect()->where('TIPO_PRODUCTO', '=',1)->first();
+        $int = $response->collect()->where('TIPO_PRODUCTO', '=',24)->first();
+        $tv = $response->collect()->whereIn('TIPO_PRODUCTO', [8900, 6042])->first();
+
+        if ($first) {
+            $contrato = collect([
+                'NOMBRE' => $first['NAME'],
+                'IDENTIFICACION' => $first['IDENTIFICATION'],
+                'SUBSCRIPTION_ID' => $first['SUBSCRIPTION_ID'],
+                'INC_VOZ' => $voz&&sizeof($voz) > 0?true:false,
+                'INC_VOZ_ACT' => $voz&&sizeof($voz) > 0?true:false,
+                'INC_INT' => $int&&sizeof($int) > 0?true:false,
+                'INC_INT_ACT' => $int&&sizeof($int) > 0?true:false,
+                'INC_TV' => $tv&&sizeof($tv) > 0?true:false,
+                'INC_TV_ACT' => $tv&&sizeof($tv) > 0?true:false,
+                'EMPAQUETADO' => ($voz&&valTrue($voz['EMPAQUETADO'])||$int&&valTrue($int['EMPAQUETADO'])||$tv&&valTrue($tv['EMPAQUETADO']))?true:false
+            ]);
+        } else {
+            $contrato = null;
+        }
+
+        return [
+            'voz' => $voz,
+            'int' => $int,
+            'tv' => $tv,
+            'contrato' => $contrato,
+            'status' => $response->status()
+        ];
+    }
+
+
 }

@@ -25,6 +25,8 @@ use App\Models\Loteria;
 use App\Models\Imagen;
 use App\Models\Militante;
 use App\Models\Pago;
+use App\Models\Paquetetv;
+use App\Models\Paquetevoz;
 use App\Models\Promoboleta;
 use App\Models\Promocional;
 use App\Models\Recibo;
@@ -127,6 +129,8 @@ class VentaController extends Controller
         $tipoidentificaciones = TiposDocumento::where('estado', 1)->get();
         $tecnologias = Tecnologia::where('estado', 1)->get();
         $restricciones = Restriccion::where('estado', 1)->get();
+        $paquetesvoz = Paquetevoz::where('estado', 1)->get();
+        $paquetestv = Paquetetv::where('estado', 1)->get();
 
         return Inertia::render('Ventas/Crear', [
             'Vendedor' => $vendedor[0],
@@ -140,9 +144,82 @@ class VentaController extends Controller
             'tipoclientes' => $tipoclientes,
             'tipoidentificaciones' =>  $tipoidentificaciones,
             'tecnologias' => $tecnologias,
-            'restricciones' => $restricciones
+            'restricciones' => $restricciones,
+            'paquetesvoz' => $paquetesvoz,
+            'paquetestv' => $paquetestv
         ]);
     }
+
+    public function changeSpeed(Request $request)
+    {
+        $vendedor = $request->session()->get('Vendedor');
+        $identificacion = $request->session()->get('Identificacion');
+        $localidad = $request->session()->get('localidad');
+        $localidaddesc = $request->session()->get('localidaddesc');
+        $cilos = Ciclo::where('estado', 1)->get();
+        $estratos = Estrato::where('estado', 1)->get();
+        $segmentos = Segmentos::where('estado', 1)->get();
+        $barrios = Barrio::where('estado', 1)->get();
+        $tipoclientes = TiposCliente::where('estado', 1)->get();
+        $tipoidentificaciones = TiposDocumento::where('estado', 1)->get();
+        $tecnologias = Tecnologia::where('estado', 1)->get();
+        $restricciones = Restriccion::where('estado', 1)->get();
+        $paquetesvoz = Paquetevoz::where('estado', 1)->get();
+        $paquetestv = Paquetetv::where('estado', 1)->get();
+
+        return Inertia::render('Ventas/Cambiovelocidad', [
+            'Vendedor' => $vendedor[0],
+            'Identificacion' => $identificacion[0],
+            'localidad' => $localidad[0],
+            'localidaddesc' => $localidaddesc[0],
+            'ciclos' => $cilos,
+            'estratos' => $estratos,
+            'barrios' => $barrios,
+            'segmentos' => $segmentos,
+            'tipoclientes' => $tipoclientes,
+            'tipoidentificaciones' =>  $tipoidentificaciones,
+            'tecnologias' => $tecnologias,
+            'restricciones' => $restricciones,
+            'paquetesvoz' => $paquetesvoz,
+            'paquetestv' => $paquetestv
+        ]);
+    }
+
+    public function empaquetar(Request $request)
+    {
+        $vendedor = $request->session()->get('Vendedor');
+        $identificacion = $request->session()->get('Identificacion');
+        $localidad = $request->session()->get('localidad');
+        $localidaddesc = $request->session()->get('localidaddesc');
+        $cilos = Ciclo::where('estado', 1)->get();
+        $estratos = Estrato::where('estado', 1)->get();
+        $segmentos = Segmentos::where('estado', 1)->get();
+        $barrios = Barrio::where('estado', 1)->get();
+        $tipoclientes = TiposCliente::where('estado', 1)->get();
+        $tipoidentificaciones = TiposDocumento::where('estado', 1)->get();
+        $tecnologias = Tecnologia::where('estado', 1)->get();
+        $restricciones = Restriccion::where('estado', 1)->get();
+        $paquetesvoz = Paquetevoz::where('estado', 1)->get();
+        $paquetestv = Paquetetv::where('estado', 1)->get();
+
+        return Inertia::render('Ventas/Empaquetar', [
+            'Vendedor' => $vendedor[0],
+            'Identificacion' => $identificacion[0],
+            'localidad' => $localidad[0],
+            'localidaddesc' => $localidaddesc[0],
+            'ciclos' => $cilos,
+            'estratos' => $estratos,
+            'barrios' => $barrios,
+            'segmentos' => $segmentos,
+            'tipoclientes' => $tipoclientes,
+            'tipoidentificaciones' =>  $tipoidentificaciones,
+            'tecnologias' => $tecnologias,
+            'restricciones' => $restricciones,
+            'paquetesvoz' => $paquetesvoz,
+            'paquetestv' => $paquetestv
+        ]);
+    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -156,13 +233,37 @@ class VentaController extends Controller
         $vendedor = $request->session()->get('Vendedor');
         $localidad = $request->session()->get('localidad');
 
+        $datos->EMPAQUETAR = valTrue($datos->EMPAQUETAR)?'Y':'N';
+        $datos->INC_VOZ = valTrue($datos->INC_VOZ)?'Y':'N';
+        $datos->INC_INT = valTrue($datos->INC_INT)?'Y':'N';
+        $datos->INC_TV = valTrue($datos->INC_TV)?'Y':'N';
+        $datos->LOCALIDAD = $localidad[0];
+        $datos->LOCALIDAD_COBR = $localidad[0];
+        $datos->VENDEDOR = $vendedor[0];
+        $datos->BARRIO = $datos->BARRIO==0?'':$datos->BARRIO;
+        $datos->BARRIO_COBR = $datos->BARRIO_COBR==0?'':$datos->BARRIO_COBR;
+        $datos->PAQUETE_SS = $datos->PAQUETE_SS==0?'':$datos->PAQUETE_SS;
+        $datos->RETRICCION = $datos->RETRICCION==0?'':$datos->RETRICCION;
+        $datos->DTH = valTrue($datos->DTH)?'Y':'N';
+        $datos->NUMERO_PRIVADO = valTrue($datos->NUMERO_PRIVADO)?'Y':'N';
+        $datos->CODVENTAS = $datos->VENDEDOR;
+
+        if ($datos->INC_VOZ == 'N') {
+            $datos->PLAN_CCIAL_LB = '';
+            $datos->PLAN_VTA_LB = '';
+        }
+        if ($datos->INC_INT == 'N') {
+            $datos->PLAN_CCIAL_INT = '';
+            $datos->PLAN_VTA_INT = '';
+        }
+        if ($datos->INC_TV == 'N') {
+            $datos->PLAN_CCIAL_TV = '';
+            $datos->PLAN_VTA_TV = '';
+        }
+
         $XmlVenta = stringtoXML($datos);
-        $XmlVenta .= "<VENDEDOR>$vendedor[0]</VENDEDOR>";
-        $XmlVenta .= "<LOCALIDAD>$localidad[0]</LOCALIDAD>";
-        $XmlVenta .= "<LOCALIDAD_COBR>$localidad</LOCALIDAD_COBR>";
 
-        dd($XmlVenta);
-
+        //dd($XmlVenta);
         $url = config('edatel.serviceurl');
         $response = Http::withOptions(['verify' => false,])
             ->asForm()
@@ -171,13 +272,17 @@ class VentaController extends Controller
                 "XmlVenta" => $XmlVenta
             ]);
 
+        //dd($response->body());
+        //[103974493/0/0//1]
+
         $result = explode("/",$response->body());
-        $idcliente = $result[0];
-        $identificacion = $result[1];
+        $solicitud = $result[0];
+        $cun = $result[1];
         $codigo = $result[2];
         $mensaje = $result[3];
+        $codventa = $result[3];
 
-        return ['id' => $idcliente, 'identificacion' => $identificacion, 'codigo' => $codigo, 'mensaje' => $mensaje];
+        return ['solicitud' => $solicitud, 'cun' => $cun, 'codigo' => $codigo, 'mensaje' => $mensaje, 'codventa' => $codventa];
     }
 
 
@@ -211,9 +316,9 @@ class VentaController extends Controller
     public function getComercialPlan(Request $request) {
         $localidad = $request->session()->get('localidad');
 
-        $prod_voz = $request->prod_voz?'Y':'N';
-        $prod_int = $request->prod_int?'Y':'N';
-        $prod_tv = $request->prod_tv?'Y':'N';
+        $prod_voz = valTrue($request->prod_voz)?'Y':'N';
+        $prod_int = valTrue($request->prod_int)?'Y':'N';
+        $prod_tv = valTrue($request->prod_tv)?'Y':'N';
         $prod_empaquetado = $request->prod_empaquetado?'Y':'N';
 
         $filtro = " $localidad[0]";
@@ -224,7 +329,6 @@ class VentaController extends Controller
             $filtro .= " and segmento = $request->segmento";
         }
         $filtro .= " and tipo_cliente = $request->tipo_cliente and prod_voz = '$prod_voz' and prod_int = '$prod_int' and prod_tv = '$prod_tv' and prod_empaquetado = '$prod_empaquetado' and TIPO_PRODUCTO in (1, 24, 8900, 6042)";
-
         $url = config('edatel.serviceurl');
         $response = Http::withOptions(['verify' => false,])
             ->asForm()
@@ -239,6 +343,50 @@ class VentaController extends Controller
         $tv = $response->collect()->whereIn('TIPO_PRODUCTO', [8900, 6042]);
 
         return ['planesvoz' => $voz, 'planesint' => $int, 'planestv' => $tv, 'status' => $response->status()];
+    }
+
+    public function getComercialPlanInd(Request $request) {
+        $localidad = $request->session()->get('localidad');
+        $prod_voz = 'N';
+        $prod_int = 'N';
+        $prod_tv = 'N';
+        $prod_empaquetado = 'N';
+
+        switch ($request->producto) {
+            case 'voz':
+                $prod_voz = 'Y';
+                $tipoproducto = 1;
+                breaK;
+            case 'internet':
+                $prod_int = 'Y';
+                $tipoproducto = 24;
+                break;
+            case 'tv':
+                $prod_tv = 'Y';
+                $tipoproducto = '8900, 6042';
+                break;
+        }
+
+        $filtro = " $localidad[0]";
+        if ($request->estrato != 0) {
+            $filtro .= " and estrato = $request->estrato";
+        }
+        if ($request->segmento != 0) {
+            $filtro .= " and segmento = $request->segmento";
+        }
+        $filtro .= " and tipo_cliente = $request->tipo_cliente and prod_voz = '$prod_voz' and prod_int = '$prod_int' and prod_tv = '$prod_tv' and prod_empaquetado = '$prod_empaquetado' and TIPO_PRODUCTO in ($tipoproducto)";
+
+        $url = config('edatel.serviceurl');
+        $response = Http::withOptions(['verify' => false,])
+            ->asForm()
+            ->post($url, [
+                "ListaVal" => 'l1574_Pl4nC14l',
+                "Filtro" => json_encode($filtro)
+            ]);
+
+        $planesind = $response->json();
+
+        return ['planesind' => $planesind, 'status' => $response->status()];
     }
 
     public function getSalesPlan(Request $request) {
@@ -257,5 +405,123 @@ class VentaController extends Controller
 
         return ['planes' => $response->json(), 'status' => $response->status()];
     }
+
+    public function getVelocidades(Request $request) {
+        $localidad = $request->session()->get('localidad');
+
+        $filtro = " $localidad[0]";
+        $filtro .= " and Plan_comercial = $request->plancomercial";
+
+        $url = config('edatel.serviceurl');
+        $response = Http::withOptions(['verify' => false,])
+            ->asForm()
+            ->post($url, [
+                "ListaVal" => 'l1574_Cl4s3Svc10',
+                "Filtro" => json_encode($filtro)
+            ]);
+
+        return ['planes' => $response->json(), 'status' => $response->status()];
+    }
+
+    public function getVelocidadesCambio(Request $request) {
+
+        $url = config('edatel.serviceurl');
+        $response = Http::withOptions(['verify' => false,])
+            ->asForm()
+            ->post($url, [
+                "ListaVal" => 'C0nsu_Cl4s_V3l0',
+                "PLAN_ACTUAL" => $request->PLANFACT
+            ]);
+
+        return ['velocidades' => $response->json(), 'status' => $response->status()];
+    }
+
+    public function storeSpeed(Request $request)
+    {
+        $vendedor = $request->session()->get('Vendedor');
+
+        $PRODUCTO_CAMVELOCIDAD = $request->PRODUCTO_CAMVELOCIDAD;
+        $VELOCIDAD_NUEVA = $request->VELOCIDAD_NUEVA;
+
+        $Xmlcambiovel = "<PRODUCTO_CAMVELOCIDAD>$PRODUCTO_CAMVELOCIDAD</PRODUCTO_CAMVELOCIDAD><VELOCIDAD_NUEVA>$VELOCIDAD_NUEVA</VELOCIDAD_NUEVA><VENDEDOR>$vendedor[0]</VENDEDOR>";
+
+        $url = config('edatel.serviceurl');
+        $response = Http::withOptions(['verify' => false,])
+            ->asForm()
+            ->post($url, [
+                "ListaVal" => 'R3gC4mb10V3l0c1d4d',
+                "Xmlcambiovel" => $Xmlcambiovel
+            ]);
+
+        //[103974493/0/0//1]
+        $result = explode("/",$response->body());
+        $solicitud = $result[0];
+        $cun = $result[1];
+        $codigo = $result[2];
+        $mensaje = $result[3];
+
+        return ['solicitud' => $solicitud, 'cun' => $cun, 'codigo' => $codigo, 'mensaje' => $mensaje];
+    }
+
+    public function getComercialPlanPaq(Request $request) {
+
+        $Producto = $request->Producto;
+        $PlanCcialVoz = $request->PlanCcialVoz;
+        $PlanCcialInt = $request->PlanCcialInt;
+        $PlanCcialTV = $request->PlanCcialTV;
+
+        $url = config('edatel.serviceurl');
+        $response = Http::withOptions(['verify' => false,])
+            ->asForm()
+            ->post($url, [
+                "ListaVal" => 'c0nsult4Pl4nC14lP4q',
+                "Filtro" => $Producto,
+                "Filtro2" => null,
+                "Filtro3" => $PlanCcialVoz,
+                "Filtro4" => $PlanCcialInt,
+                "Filtro5" => $PlanCcialTV
+        ]);
+
+        //dd($response->json());
+        return ['planescomm' => $response->json(), 'status' => $response->status()];
+    }
+
+    public function storepaquete(Request $request)
+    {
+        $vendedor = $request->session()->get('Vendedor');
+
+        $XmlPaquete =   "<PROD_VOZ>$request->PROD_VOZ</PROD_VOZ>" .
+                        "<PROD_INT>$request->PROD_INT</PROD_INT>" .
+                        "<PROD_TV>$request->PROD_TV</PROD_TV>" .
+                        "<MOT_VTA_VOZ>$request->MOT_VTA_VOZ</MOT_VTA_VOZ>" .
+                        "<MOT_VTA_INT>$request->MOT_VTA_INT</MOT_VTA_INT>" .
+                        "<MOT_VTA_TV>$request->MOT_VTA_TV</MOT_VTA_TV>" .
+                        "<PLAN_CCIAL_VOZ>$request->PLAN_CCIAL_VOZ</PLAN_CCIAL_VOZ>" .
+                        "<PLAN_CCIAL_INT>$request->PLAN_CCIAL_INT</PLAN_CCIAL_INT>" .
+                        "<PLAN_CCIAL_TV>$request->PLAN_CCIAL_TV</PLAN_CCIAL_TV>" .
+                        "<PLAN_VTA_VOZ>$request->PLAN_VTA_VOZ</PLAN_VTA_VOZ>" .
+                        "<PLAN_VTA_INT>$request->PLAN_VTA_INT</PLAN_VTA_INT>" .
+                        "<PLAN_VTA_TV>$request->PLAN_VTA_TV</PLAN_VTA_TV>" .
+                        "<VENDEDOR>$vendedor[0]</VENDEDOR>";
+
+        dd($XmlPaquete);
+        $url = config('edatel.serviceurl');
+        $response = Http::withOptions(['verify' => false,])
+            ->asForm()
+            ->post($url, [
+                "ListaVal" => 'R3g3mp4qu4t4m13nt0',
+                "XmlPaquete" => $XmlPaquete
+            ]);
+
+        //[103974493/0/0//1]
+        $result = explode("/",$response->body());
+        $solicitud = $result[0];
+        $cun = $result[1];
+        $codigo = $result[2];
+        $mensaje = $result[3];
+
+        return ['solicitud' => $solicitud, 'cun' => $cun, 'codigo' => $codigo, 'mensaje' => $mensaje];
+    }
+
 
 }

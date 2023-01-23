@@ -2,7 +2,7 @@
     <AppLayout title="Usuarios">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Menú Clietes
+                Menú Clientes
             </h2>
         </template>
         <div class="py-4 lg:px-4 md:px-2 sm:px-2">

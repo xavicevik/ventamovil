@@ -42,6 +42,7 @@ export default {
             arrayPlanesVentaVoz: [],
             arrayPlanesVentaInternet: [],
             arrayPlanesVentaTv: [],
+            arrayVelocidadesInt: [],
 
             arrayEmpresas: [],
             editMode: false,

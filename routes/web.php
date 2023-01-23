@@ -48,6 +48,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified',]
     Route::get('/master/getTipoCliente', [MasterController::class, 'getTipoCliente'])->name('master.getTipoCliente');
     Route::get('/master/getSegmentos', [MasterController::class, 'getSegmentos'])->name('master.getSegmentos');
     Route::get('/master/getRestricciones', [MasterController::class, 'getRestricciones'])->name('master.getRestricciones');
+    Route::get('/venta/getVelocidades', [VentaController::class, 'getVelocidades'])->name('venta.getVelocidades');
+
 
     Route::get('/cliente/getCliente', [ClienteController::class, 'getCliente'])->name('master.getCliente');
     Route::get('/master/getBarrioLocalidad', [MasterController::class, 'getBarrioLocalidad'])->name('master.getBarrioLocalidad');
@@ -65,7 +67,24 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified',]
     Route::get('/venta/store', [VentaController::class, 'store'])->name('venta.store');
     Route::get('/venta/getCliente', [VentaController::class, 'getCliente'])->name('venta.getCliente');
     Route::get('/venta/getComercialPlan', [VentaController::class, 'getComercialPlan'])->name('venta.getComercialPlan');
+    Route::get('/venta/getComercialPlanInd', [VentaController::class, 'getComercialPlanInd'])->name('venta.getComercialPlanInd');
     Route::get('/venta/getSalesPlan', [VentaController::class, 'getSalesPlan'])->name('venta.getSalesPlan');
+
+    // Cambio de velocidad
+    Route::get('/velocidad.cambio', [VentaController::class, 'changeSpeed'])->name('velocidad.changeSpeed');
+    Route::get('/velocidad/store', [VentaController::class, 'storeSpeed'])->name('velocidad.storeSpeed');
+    Route::post('/velocidad/store', [VentaController::class, 'storeSpeed'])->name('velocidad.storeSpeed');
+
+    Route::get('/velocidad/getContrato', [VentaController::class, 'getContrato'])->name('velocidad.getContrato');
+    Route::get('/velocidad/getProductVoz', [VentaController::class, 'getProductVoz'])->name('velocidad.getProductVoz');
+    Route::get('/cliente/getContrato', [ClienteController::class, 'getContrato'])->name('master.getContrato');
+    Route::get('/venta/getVelocidadesCambio', [VentaController::class, 'getVelocidadesCambio'])->name('venta.getVelocidadesCambio');
+
+    // Paquete
+    Route::get('/venta.paquete', [VentaController::class, 'empaquetar'])->name('venta.paquete');
+    Route::get('/cliente/getContratoProd', [ClienteController::class, 'getContratoProd'])->name('master.getContratoProd');
+    Route::get('/venta/getComercialPlanPaq', [VentaController::class, 'getComercialPlanPaq'])->name('venta.getComercialPlanPaq');
+    Route::get('/paquete/store', [VentaController::class, 'storepaquete'])->name('paquete.store');
 
 
 

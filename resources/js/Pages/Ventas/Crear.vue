@@ -46,9 +46,25 @@
                 </div>
             </div>
         </section>
-
+        <section v-if="false">
+            <!-- validateRifa <form> -->
+            <div class="bg-white fixed h-screen items-center pb-1 mx-auto items-center w-full">
+                <div class="">
+                    <!-- Formulario -->
+                    <section>
+                        <div class="absolute mt-10 w-full" id="appx">
+                            <semipolar-spinner class="mt-10 mx-auto" :animation-duration="2000" :size="85" color="#ff1d5e" />
+                        </div>
+                    </section>
+                    <!-- Fin formulario -->
+                </div>
+            </div>
+            <!-- </form> -->
+        </section>
         <div class="w-full pt-2 pb-10 px-2 rounded-lg lg:px-4 md:px-2 sm:px-2">
+
             <div class="mx-auto 2xl:8">
+
 <!--                datos del cliente-->
                 <div id="facturacion" name="facturacion" class="bg-white overflow-hidden shadow-xl rounded-lg">
                     <!-- Mensajes Flash -->
@@ -283,7 +299,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mx-2 w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
                             </svg>
-                            <input type="checkbox" @change="getComercialPlan('voz')" value="1" v-model="form.INC_VOZ" class="px-2 w-6 h-6 text-red-600 rounded border-red-600 focus:ring-red-500 focus:ring-2">
+                            <input type="checkbox" @change="valSelTab('voz'); form.EMPAQUETAR?getComercialPlan('voz'):getComercialPlanInd('voz')" value="1" v-model="form.INC_VOZ" class="px-2 w-6 h-6 text-red-600 rounded border-red-600 focus:ring-red-500 focus:ring-2">
                             <span class="mx-2">
                                 Voz
                             </span>
@@ -292,7 +308,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mx-2 w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 011.06 0z" />
                             </svg>
-                            <input type="checkbox" @change="getComercialPlan('internet')" value="1" v-model="form.INC_INT" class="px-2 w-6 h-6 text-red-600 rounded border-red-600 focus:ring-red-500 dfocus:ring-2">
+                            <input type="checkbox" @change="valSelTab('internet'); form.EMPAQUETAR?getComercialPlan('internet'):getComercialPlanInd('internet')" value="1" v-model="form.INC_INT" class="px-2 w-6 h-6 text-red-600 rounded border-red-600 focus:ring-red-500 dfocus:ring-2">
                             <span class="mx-2">
                                 Internet
                             </span>
@@ -301,7 +317,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mx-2 w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 20.25h12m-7.5-3v3m3-3v3m-10.125-3h17.25c.621 0 1.125-.504 1.125-1.125V4.875c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125z" />
                             </svg>
-                            <input type="checkbox" @change="getComercialPlan('tv')" value="1" v-model="form.INC_TV" class="px-2 w-6 h-6 text-red-600 rounded border-red-600 focus:ring-red-500 dfocus:ring-2">
+                            <input type="checkbox" @change="valSelTab('tv'); form.EMPAQUETAR?getComercialPlan('tv'):getComercialPlanInd('tv')" value="1" v-model="form.INC_TV" class="px-2 w-6 h-6 text-red-600 rounded border-red-600 focus:ring-red-500 dfocus:ring-2">
                             <span class="mx-2">
                                 TV
                             </span>
@@ -351,7 +367,7 @@
                                             <option v-for="opcion in arrayPlanesComVoz" :key="opcion.CODIGO" :value="opcion.CODIGO" v-text="opcion.DESCRIPCION"></option>
                                         </select>
                                         <label class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                            Plane comercial
+                                            Plan comercial
                                         </label>
                                         <div v-if="errors.PLAN_CCIAL_LB" class="text-xs text-red-500">{{ errors.PLAN_CCIAL_LB }}</div>
                                     </div>
@@ -375,18 +391,32 @@
                                         </label>
                                         <div v-if="errors.RETRICCION" class="text-xs text-red-500">{{ errors.RETRICCION }}</div>
                                     </div>
-                                    <div class="relative z-0 w-full my-2 group">
-                                        <select class="block py-4 px-0 w-full text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" v-model="form.TIPO_IDENT">
-                                            <option value="0" >Seleccione</option>
-                                            <option v-for="opcion in arrayTiposdocumento" :key="opcion.CODIGO" :value="opcion.CODIGO" v-text="opcion.DESCRIPCION"></option>
-                                        </select>
-                                        <label class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                            Paquetes de voz
-                                        </label>
-                                        <div v-if="errors.IDENTIFICACION" class="text-xs text-red-500">{{ errors.IDENTIFICACION }}</div>
+                                    <div class="w-full my-2 group">
+                                        <Multiselect
+                                            v-model="pqvoz"
+                                            mode="tags"
+                                            :close-on-select="true"
+                                            :searchable="true"
+                                            :options="paquetesvoz"
+                                            placeholder="Seleccione los paquetes"
+                                            track-by="DESCRIPCION"
+                                            label="DESCRIPCION"
+                                            hideSelectedTag="true"
+                                            :search="true"
+                                            noResultsText="No se encontró resultado"
+
+                                            :clear-on-select="false"
+                                            :preserve-search="true"
+                                            :preselect-first="true"
+
+                                            :classes="{
+                                              tag: 'bg-blue-500 text-white text-sm font-semibold py-0.5 pl-2 rounded mr-1 mb-1 flex items-center rtl:pl-0 rtl:pr-2 rtl:mr-0 rtl:ml-1',
+                                            }"
+
+                                        />
                                     </div>
                                     <div class="relative z-0 w-full my-2 group">
-                                        <input type="checkbox" v-model="form.NUMERO_PRIVADO" value="Y" class="px-2 w-6 h-6 text-red-600 rounded border-red-600 focus:ring-red-500 dfocus:ring-2">
+                                        <input type="checkbox" v-model="form.NUMERO_PRIVADO" value="1" class="px-2 w-6 h-6 text-red-600 rounded border-red-600 focus:ring-red-500 dfocus:ring-2">
                                         <label class="px-2 text-sm text-gray-500 peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100">
                                             Número privado
                                         </label>
@@ -418,13 +448,38 @@
                                         </label>
                                         <div v-if="errors.PLAN_VTA_TV" class="text-xs text-red-500">{{ errors.PLAN_VTA_TV }}</div>
                                     </div>
+                                    <div class="w-full my-2 group">
+                                        <Multiselect
+                                            v-model="pqtv"
+                                            mode="tags"
+                                            :close-on-select="true"
+                                            :searchable="true"
+                                            :options="paquetestv"
+                                            placeholder="Seleccione los paquetes"
+                                            track-by="DESCRIPCION"
+                                            label="DESCRIPCION"
+                                            hideSelectedTag="true"
+                                            :search="true"
+                                            noResultsText="No se encontró resultado"
+
+                                            :clear-on-select="false"
+                                            :preserve-search="true"
+                                            :preselect-first="true"
+
+                                            :classes="{
+                                              tag: 'bg-blue-500 text-white text-sm font-semibold py-0.5 pl-2 rounded mr-1 mb-1 flex items-center rtl:pl-0 rtl:pr-2 rtl:mr-0 rtl:ml-1',
+                                            }"
+
+                                        />
+                                    </div>
                                     <div class="flex relative z-0 w-full my-2 group">
                                         <div class="w-1/2 mr-2">
                                             <select v-model="form.DECOS_ST" class="block py-4 px-0 w-full text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                                                <option value="0" >Seleccione</option>
+                                                <option value="0">0</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
                                                 <option value="3">3</option>
+                                                <option value="4">4</option>
                                             </select>
                                             <label class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                                 Cantidad Decos ST
@@ -433,10 +488,11 @@
                                         </div>
                                         <div class="w-1/2 ml-2">
                                             <select v-model="form.DECOS_HD" class="block py-4 px-0 w-full text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-                                                <option value="0" >Seleccione</option>
+                                                <option value="0">0</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
                                                 <option value="3">3</option>
+                                                <option value="4">4</option>
                                             </select>
                                             <label class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                                 Cantidad Decos HD
@@ -446,7 +502,7 @@
 
                                     </div>
                                     <div class="relative z-0 w-full my-2 group">
-                                        <input type="checkbox" v-model="form.DTH" value="Y" class="px-2 w-6 h-6 text-red-600 rounded border-red-600 focus:ring-red-500 dfocus:ring-2">
+                                        <input type="checkbox" v-model="form.DTH" value="1" class="px-2 w-6 h-6 text-red-600 rounded border-red-600 focus:ring-red-500 dfocus:ring-2">
                                         <label class="px-2 text-sm text-gray-500 peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100">
                                             Cobrar suscripción DTH
                                         </label>
@@ -459,12 +515,12 @@
                             <div class="px-4 py-4">
                                 <div class="grid xl:grid-cols-2 xl:gap-6">
                                     <div class="relative z-0 w-full my-2 group">
-                                        <select @change="getSalesPlan(form.PLAN_CCIAL_INT, 'internet')" v-model="form.PLAN_CCIAL_INT" class="block py-4 px-0 w-full text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                                        <select @change="getSalesPlan(form.PLAN_CCIAL_INT, 'internet'), getVelocidades(form.PLAN_CCIAL_INT)" v-model="form.PLAN_CCIAL_INT" class="block py-4 px-0 w-full text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
                                             <option value="0" >Seleccione</option>
                                             <option v-for="opcion in arrayPlanesComInternet" :key="opcion.CODIGO" :value="opcion.CODIGO" v-text="opcion.DESCRIPCION"></option>
                                         </select>
                                         <label class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                            Plane comercial
+                                            Plan comercial
                                         </label>
                                         <div v-if="errors.PLAN_CCIAL_INT" class="text-xs text-red-500">{{ errors.PLAN_CCIAL_INT }}</div>
                                     </div>
@@ -474,14 +530,14 @@
                                             <option v-for="opcion in arrayPlanesVentaInternet" :key="opcion.CODIGO" :value="opcion.CODIGO" v-text="opcion.DESCRIPCION"></option>
                                         </select>
                                         <label class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                            Plane Venta
+                                            Plan Venta
                                         </label>
                                         <div v-if="errors.PLAN_VTA_INT" class="text-xs text-red-500">{{ errors.PLAN_VTA_INT }}</div>
                                     </div>
                                     <div class="relative z-0 w-full my-2 group">
                                         <select v-model="form.VELOCIDAD" class="block py-4 px-0 w-full text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
                                             <option value="0" >Seleccione</option>
-                                            <option v-for="opcion in arrayVelocidadInt" :key="opcion.CODIGO" :value="opcion.CODIGO" v-text="opcion.DESCRIPCION"></option>
+                                            <option v-for="opcion in arrayVelocidadesInt" :key="opcion.CLASE_SERVICIO" :value="opcion.CLASE_SERVICIO" v-text="opcion.DESCRIPCION"></option>
                                         </select>
                                         <label class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                             Velocidades Internet
@@ -577,11 +633,11 @@
                             </div>
                             <div class="grid xl:grid-cols-2 xl:gap-6">
                                 <div class="relative z-0 w-full my-2 group">
-                                    <input type="text" v-model="form.DIRCOMPLEMENTO" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                                    <input type="text" v-model="form.COMPLEMENTO_DIRECCION_INST" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
                                     <label class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                         Complemento
                                     </label>
-                                    <div v-if="errors.DIRCOMPLEMENTO" class="text-xs text-red-500">{{ errors.DIRCOMPLEMENTO }}</div>
+                                    <div v-if="errors.COMPLEMENTO_DIRECCION_INST" class="text-xs text-red-500">{{ errors.COMPLEMENTO_DIRECCION_INST }}</div>
                                 </div>
                             </div>
                             <div class="w-full inline-flex mt-2">
@@ -642,11 +698,11 @@
                             </div>
                             <div class="grid xl:grid-cols-2 xl:gap-6">
                                 <div class="relative z-0 w-full my-2 group">
-                                    <input type="text" v-model="form.DIRCOMPLEMENTO_CBR" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                                    <input type="text" v-model="form.COMPLEMENTO_DIRECCION_CBR" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
                                     <label class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                         Complemento
                                     </label>
-                                    <div v-if="errors.DIRCOMPLEMENTO_CBR" class="text-xs text-red-500">{{ errors.DIRCOMPLEMENTO_CBR }}</div>
+                                    <div v-if="errors.COMPLEMENTO_DIRECCION_CBR" class="text-xs text-red-500">{{ errors.COMPLEMENTO_DIRECCION_CBR }}</div>
                                 </div>
                             </div>
                             <div class="w-full inline-flex mt-2">
@@ -664,6 +720,31 @@
                 </div>
             </section>
             <!-- Fin Ventana modal dirección de cobro -->
+
+
+            <!-- Ventana modal dirección de loading -->
+            <!-- Main modal -->
+            <section> <!-- Ventana modal -->
+                <div class="fixed z-10 inset-0 overflow-y-auto ease-out duration-400" v-if="loading">
+                    <div class="items-end justify-center min-h-screen pt-10 px-2 pb-20 text-center sm:block sm:p-0">
+
+                        <div class="fixed inset-0 transition-opacity">
+                            <div class="absolute inset-0 bg-gray-400 opacity-75"></div>
+                        </div>
+
+                        <!-- This element is to trick the browser into centering the modal contents. -->
+                        <span class="hidden inline-block align-middle h-screen"></span>
+                            <section>
+                                <div class=" mt-10 w-full" id="app">
+                                    <semipolar-spinner class="mt-10 mx-auto" :animation-duration="2000" :size="85" color="#ff1d5e" />
+                                </div>
+                            </section>
+
+
+                    </div>
+                </div>
+            </section>
+            <!-- Fin Ventana modal dirección de loading -->
 
 
         </div>
@@ -687,6 +768,10 @@ import JetNavLink from '@/Jetstream/NavLink.vue';
 import NavLink from "../../Jetstream/NavLink";
 import Input from "../../Jetstream/Input";
 
+import Multiselect from '@vueform/multiselect'
+
+import { SemipolarSpinner } from 'epic-spinners'
+
 export default {
 
     components: {
@@ -700,7 +785,8 @@ export default {
         JetNavLink,
         Link,
         money3: Money3Component,
-
+        Multiselect,
+        SemipolarSpinner
     },
     props:{
         users : [],
@@ -715,13 +801,18 @@ export default {
         barrios:[],
         estratos: [],
         tecnologias: [],
-        restricciones: []
+        restricciones: [],
+        paquetesvoz: [],
+        paquetestv: []
     },
     computed: {
 
     },
     data() {
         return {
+            loading: false,
+            pqvoz: [],
+            pqtv: [],
             //segmento: '',
             //tipocliente: '',
             activeTab: '',
@@ -820,11 +911,13 @@ export default {
                 OBSERVACIONES: '',
                 SECTOR: '',
                 CONTADOR: '',
-                DTH: 'N',
-                NUMERO_PRIVADO: 'N',
-                WIFIPROINCLUIDO: 'N',
-                WIFIPROARRIENDO: 'N',
-                WIFIPROFIDELIZA: 'N'
+                DTH: 0,
+                NUMERO_PRIVADO: 0,
+                WIFIPROINCLUIDO: 0,
+                WIFIPROARRIENDO: 0,
+                WIFIPROFIDELIZA: 0,
+                COMPLEMENTO_DIRECCION_CBR: '',
+                COMPLEMENTO_DIRECCION_INST: ''
             }
         }
     },
@@ -1011,6 +1104,7 @@ export default {
 
 
         crearDireccion: async function (opcion, direccion, barrio) {
+            this.loading = true;
             let statuserror = true;
             let url = '/direccion/storeDirInsta';
 
@@ -1067,8 +1161,10 @@ export default {
                 })
                 console.log(res.data);
             }
+            this.loading = false;
         },
         save: async function (form) {
+            this.loading = true;
             let statuserror = true;
             this.isValidategeneral = false;
 
@@ -1133,41 +1229,82 @@ export default {
                 this.errors.EMPAQUETAR = null;
             }
 
-            if (this.form.PLAN_CCIAL_LB  == 0) {
-                statuserror =  false;
-                this.errors.PLAN_CCIAL_LB = 'Seleccione el plan comercial de Voz';
-            } else {
-                this.errors.PLAN_CCIAL_LB = null;
+            if (this.form.INC_VOZ) {
+                if (this.form.PLAN_CCIAL_LB == 0) {
+                    statuserror = false;
+                    this.errors.PLAN_CCIAL_LB = 'Seleccione el plan comercial de Voz';
+                } else {
+                    this.errors.PLAN_CCIAL_LB = null;
+                }
+                if (this.form.PLAN_VTA_LB == 0) {
+                    statuserror = false;
+                    this.errors.PLAN_VTA_LB = 'Seleccione el plan de venta de Voz';
+                } else {
+                    this.errors.PLAN_VTA_LB = null;
+                }
+                if (this.pqvoz.length > 0) {
+                    this.form.PAQUETE_SS = this.pqvoz[0];
+                    for(let i = 1; i < this.pqvoz.length; i++) {
+                        this.form.PAQUETE_SS += ','+this.pqvoz[i];
+                    }
+                }
             }
-            if (this.form.PLAN_VTA_LB  == 0) {
-                statuserror =  false;
-                this.errors.PLAN_VTA_LB = 'Seleccione el plan de venta de Voz';
-            } else {
-                this.errors.PLAN_VTA_LB = null;
+            if (this.form.INC_INT) {
+                if (this.form.PLAN_CCIAL_INT == 0) {
+                    statuserror = false;
+                    this.errors.PLAN_CCIAL_INT = 'Seleccione el plan comercial de Internet';
+                } else {
+                    this.errors.PLAN_CCIAL_INT = null;
+                }
+                if (this.form.PLAN_VTA_INT == 0) {
+                    statuserror = false;
+                    this.errors.PLAN_VTA_INT = 'Seleccione el plan de venta de Internet';
+                } else {
+                    this.errors.PLAN_VTA_INT = null;
+                }
+                if (this.form.VELOCIDAD  == 0) {
+                    statuserror =  false;
+                    this.errors.VELOCIDAD = 'Seleccione la velocidad';
+                } else {
+                    this.errors.VELOCIDAD = null;
+                }
+                switch (this.wifiselect) {
+                    case "incluido":
+                        this.form.WIFIPROINCLUIDO = 1;
+                        break;
+                    case "arriendo":
+                        this.form.WIFIPROARRIENDO = 1;
+                        break;
+                    case "fideliza":
+                        this.form.WIFIPROFIDELIZA = 1;
+                        break;
+                }
             }
-            if (this.form.PLAN_CCIAL_INT  == 0) {
-                statuserror =  false;
-                this.errors.PLAN_CCIAL_INT = 'Seleccione el plan comercial de Internet';
-            } else {
-                this.errors.PLAN_CCIAL_INT = null;
-            }
-            if (this.form.PLAN_VTA_INT  == 0) {
-                statuserror =  false;
-                this.errors.PLAN_VTA_INT = 'Seleccione el plan de venta de Internet';
-            } else {
-                this.errors.PLAN_VTA_INT = null;
-            }
-            if (this.form.PLAN_CCIAL_TV  == 0) {
-                statuserror =  false;
-                this.errors.PLAN_CCIAL_TV = 'Seleccione el plan comercial de Tv';
-            } else {
-                this.errors.PLAN_CCIAL_TV = null;
-            }
-            if (this.form.PLAN_VTA_TV  == 0) {
-                statuserror =  false;
-                this.errors.PLAN_VTA_TV = 'Seleccione el plan de venta de Tv';
-            } else {
-                this.errors.PLAN_VTA_TV = null;
+            if (this.form.INC_TV) {
+                if (this.form.PLAN_CCIAL_TV == 0) {
+                    statuserror = false;
+                    this.errors.PLAN_CCIAL_TV = 'Seleccione el plan comercial de Tv';
+                } else {
+                    this.errors.PLAN_CCIAL_TV = null;
+                }
+                if (this.form.PLAN_VTA_TV == 0) {
+                    statuserror = false;
+                    this.errors.PLAN_VTA_TV = 'Seleccione el plan de venta de Tv';
+                } else {
+                    this.errors.PLAN_VTA_TV = null;
+                }
+                if ((this.form.DECOS_ST + this.form.DECOS_HD) == 0) {
+                    statuserror =  false;
+                    this.errors.DECOS_ST = 'Seleccione al menos un deco';
+                } else {
+                    this.errors.DECOS_ST = null;
+                }
+                if (this.pqtv.length > 0) {
+                    this.form.PAQ_TELEVISION = this.pqtv[0];
+                    for(let i = 1; i < this.pqtv.length; i++) {
+                        this.form.PAQ_TELEVISION += ','+this.pqtv[i];
+                    }
+                }
             }
             if (this.form.TECNOLOGIA  == 0) {
                 statuserror =  false;
@@ -1193,40 +1330,6 @@ export default {
             } else {
                 this.errors.DIRECCION_COBR = null;
             }
-            /*
-            if (this.form.PAQUETE_SS  == '') {
-                statuserror =  false;
-                this.errors.PAQUETE_SS = 'Seleccione el segmento';
-            } else {
-                this.errors.PAQUETE_SS = null;
-            }
-
-            if (this.form.VELOCIDAD  == 0) {
-                statuserror =  false;
-                this.errors.VELOCIDAD = 'Seleccione la velocidad';
-            } else {
-                this.errors.VELOCIDAD = null;
-            }
-            */
-
-            if ((this.form.DECOS_ST + this.form.DECOS_HD) == 0) {
-                statuserror =  false;
-                this.errors.DECOS_ST = 'Seleccione al menos un deco';
-            } else {
-                this.errors.DECOS_ST = null;
-            }
-
-            switch (this.wifiselect) {
-                case "incluido":
-                    this.form.WIFIPROINCLUIDO = 'Y';
-                    break;
-                case "arriendo":
-                    this.form.WIFIPROARRIENDO = 'Y';
-                    break;
-                case "fideliza":
-                    this.form.WIFIPROFIDELIZA = 'Y';
-                    break;
-            }
 
             if (!statuserror) {
                 Swal.fire({
@@ -1244,6 +1347,7 @@ export default {
             });
 
             console.log('creación de solicitud de venta');
+
             let res;
             try {
                 res = await axios.get('/venta/store', {
@@ -1258,26 +1362,27 @@ export default {
 
             let resultado = res.data;
 
-            if (resultado.codigo == 0) {
+            if (resultado.codigo == 0 && resultado.solicitud > 0) {
                 Swal.fire({
                     icon: 'success',
-                    title: 'La venta ' + resultado.id + ' ha sido registrada satisfactoriamente',
-                    showConfirmButton: false,
-                    timer: 2000
+                    title: 'La solicitud ' + resultado.solicitud + ' ha sido registrada satisfactoriamente',
+                    showConfirmButton: true,
                 })
                 console.log(res.data);
                 this.reset();
             } else {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Error registrando venta',
+                    title: resultado.mensaje,
                     showConfirmButton: true,
                 })
                 this.errorcreacion = resultado.mensaje;
                 console.log(res.data);
             }
+            this.loading = false;
         },
         getCliente: async function (tipocliente, tipoident, identificacion) {
+            this.loading = true;
             console.log('consultar cliente');
             let res;
             try {
@@ -1317,6 +1422,7 @@ export default {
                     timer: 1500
                 })
             }
+            this.loading = false;
         },
         next: function (option) {
             switch (option) {
@@ -1424,19 +1530,70 @@ export default {
             }
         },
         getComercialPlan: async function (producto) {
+            this.loading = true;
+            console.log('loading...');
+            if (this.form.EMPAQUETAR) {
+                console.log('consultar plan comercial');
+                let res;
+                console.log('INC_VOZ ' + this.form.INC_VOZ);
+                console.log('INC_INT ' + this.form.INC_INT);
+                console.log('INC_TV ' + this.form.INC_TV);
+                try {
+                    res = await axios.get('/venta/getComercialPlan', {
+                        params: {
+                            producto: producto,
+                            prod_voz: this.form.INC_VOZ,
+                            prod_int: this.form.INC_INT,
+                            prod_tv: this.form.INC_TV,
+                            estrato: this.form.ESTRATO, //104
+                            segmento: this.form.SEGMENTO, //120
+                            tipo_cliente: this.form.TIPO_CLIENTE, //99
+                            prod_empaquetado: this.form.EMPAQUETAR
+                        }
+                    });
+                } catch (error) {
+                    console.log(error);
+                    return false;
+                }
+                console.log(res.data);
+                this.arrayPlanesComVoz = [];
+                this.arrayPlanesComTv = [];
+                this.arrayPlanesComInternet = [];
+                this.arrayPlanesComVoz = res.data.planesvoz;
+                this.arrayPlanesComTv = res.data.planestv;
+                this.arrayPlanesComInternet = res.data.planesint;
+                this.form.PLAN_CCIAL_LB = 0;
+                this.form.PLAN_VTA_LB = 0;
+                this.form.PLAN_CCIAL_INT = 0;
+                this.form.PLAN_VTA_INT = 0;
+                this.form.VELOCIDAD;
+                this.form.PLAN_CCIAL_TV = 0;
+                this.form.PLAN_VTA_TV = 0;
+
+            } else {
+                if (this.form.INC_VOZ) {
+                    this.getComercialPlanInd('voz');
+                }
+                if (this.form.INC_INT) {
+                    this.getComercialPlanInd('internet');
+                }
+                if (this.form.INC_TV) {
+                    this.getComercialPlanInd('tv');
+                }
+            }
+            this.loading = false;
+        },
+        getComercialPlanInd: async function (producto) {
+            this.loading = true;
             console.log('consultar plan comercial');
             let res;
             try {
-                res = await axios.get('/venta/getComercialPlan', {
+                res = await axios.get('/venta/getComercialPlanInd', {
                     params: {
                         producto: producto,
-                        prod_voz: this.form.INC_VOZ,
-                        prod_int: this.form.INC_VOZ,
-                        prod_tv: this.form.INC_VOZ,
                         estrato: this.form.ESTRATO, //104
                         segmento: this.form.SEGMENTO, //120
                         tipo_cliente: this.form.TIPO_CLIENTE, //99
-                        prod_empaquetado: this.form.EMPAQUETAR
                     }
                 });
             } catch (error) {
@@ -1444,12 +1601,32 @@ export default {
                 return false;
             }
             console.log(res.data);
-            this.arrayPlanesComVoz = res.data.planesvoz;
-            this.arrayPlanesComTv = res.data.planestv;
-            this.arrayPlanesComInternet = res.data.planesint;
+            switch (producto) {
+                case 'voz':
+                    this.arrayPlanesComVoz = [];
+                    this.arrayPlanesComVoz = res.data.planesind;
+                    this.form.PLAN_CCIAL_LB = 0;
+                    this.form.PLAN_VTA_LB = 0;
+                    break;
+                case 'internet':
+                    this.arrayPlanesComInternet = [];
+                    this.arrayPlanesComInternet = res.data.planesind;
+                    this.form.PLAN_CCIAL_INT = 0;
+                    this.form.PLAN_VTA_INT = 0;
+                    this.form.VELOCIDAD = 0;
+                    break;
+                case 'tv':
+                    this.arrayPlanesComTv = [];
+                    this.arrayPlanesComTv = res.data.planesind;
+                    this.form.PLAN_CCIAL_TV = 0;
+                    this.form.PLAN_VTA_TV = 0;
+                    break;
+            }
+            this.loading = false;
         },
         getSalesPlan: async function (plancomercial, opcion) {
             console.log('consultar plan venta');
+            this.loading = true;
             let res;
             try {
                 res = await axios.get('/venta/getSalesPlan', {
@@ -1473,9 +1650,26 @@ export default {
                     this.arrayPlanesVentaTv = res.data.planes;
                     break;
             }
+            this.loading = false;
 
         },
 
+        getVelocidades: async function (plancomercial) {
+            console.log('consultar velocidad');
+            let res;
+            try {
+                res = await axios.get('/venta/getVelocidades', {
+                    params: {
+                        plancomercial: plancomercial
+                    }
+                });
+            } catch (error) {
+                console.log(error);
+                return false;
+            }
+            console.log(res.data);
+            this.arrayVelocidadesInt = res.data.planes;
+        },
 
         changeTab: function (option) {
             switch (option) {
@@ -1490,6 +1684,25 @@ export default {
                 case 'internet':
                     this.activeTab = 'internet';
                     //this.getComercialPlan('internet');
+                    break;
+            }
+        },
+        valSelTab: function (producto){
+            switch (producto) {
+                case 'voz':
+                    if (!this.form.INC_INT && !this.form.INC_TV) {
+                        this.activeTab = 'voz';
+                    }
+                    break;
+                case 'internet':
+                    if (!this.form.INC_VOZ && !this.form.INC_TV) {
+                        this.activeTab = 'internet';
+                    }
+                    break;
+                case 'tv':
+                    if (!this.form.INC_VOZ && !this.form.INC_INT) {
+                        this.activeTab = 'tv';
+                    }
                     break;
             }
         }
@@ -1509,3 +1722,4 @@ export default {
     },
 }
 </script>
+<style src="@vueform/multiselect/themes/default.css"></style>
