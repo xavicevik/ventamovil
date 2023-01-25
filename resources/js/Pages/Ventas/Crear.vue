@@ -1350,7 +1350,7 @@ export default {
 
             let res;
             try {
-                res = await axios.get('/venta/store', {
+                res = await axios.post('/venta/store', {
                     params: {
                         XmlVenta: this.form
                     }

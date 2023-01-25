@@ -84,7 +84,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified',]
     Route::get('/venta.paquete', [VentaController::class, 'empaquetar'])->name('venta.paquete');
     Route::get('/cliente/getContratoProd', [ClienteController::class, 'getContratoProd'])->name('master.getContratoProd');
     Route::get('/venta/getComercialPlanPaq', [VentaController::class, 'getComercialPlanPaq'])->name('venta.getComercialPlanPaq');
-    Route::get('/paquete/store', [VentaController::class, 'storepaquete'])->name('paquete.store');
+    Route::get('/venta/storepaquete', [VentaController::class, 'storepaquete'])->name('venta.storepaquete');
 
 
 

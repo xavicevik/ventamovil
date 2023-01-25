@@ -138,6 +138,17 @@ class ClienteController extends Controller
         $int = $response->collect()->where('TIPO_PRODUCTO', '=',24)->first();
         $tv = $response->collect()->whereIn('TIPO_PRODUCTO', [8900, 6042])->first();
 
+        $response2 = Http::withOptions(['verify' => false,])
+            ->asForm()
+            ->post($url, [
+                "ListaVal" => 'c0nsult4M0t1v0S0l',
+                "Filtro" => $request->contrato
+            ]);
+
+        $solvoz = $response2->collect()->where('PRODUCT_TYPE_ID', '=',1)->first();
+        $solint = $response2->collect()->where('PRODUCT_TYPE_ID', '=',24)->first();
+        $soltv = $response2->collect()->whereIn('PRODUCT_TYPE_ID', [8900, 6042])->first();
+
         if ($first) {
             $contrato = collect([
                 'NOMBRE' => $first['NAME'],
@@ -149,6 +160,9 @@ class ClienteController extends Controller
                 'INC_INT_ACT' => $int&&sizeof($int) > 0?true:false,
                 'INC_TV' => $tv&&sizeof($tv) > 0?true:false,
                 'INC_TV_ACT' => $tv&&sizeof($tv) > 0?true:false,
+                'INC_SOLVOZ' => $solvoz&&sizeof($solvoz) > 0?true:false,
+                'INC_SOLINT' => $solint&&sizeof($solint) > 0?true:false,
+                'INC_SOLTV' => $soltv&&sizeof($soltv) > 0?true:false,
                 'EMPAQUETADO' => ($voz&&valTrue($voz['EMPAQUETADO'])||$int&&valTrue($int['EMPAQUETADO'])||$tv&&valTrue($tv['EMPAQUETADO']))?true:false
             ]);
         } else {
@@ -159,10 +173,15 @@ class ClienteController extends Controller
             'voz' => $voz,
             'int' => $int,
             'tv' => $tv,
+            'solvoz' => $solvoz,
+            'solint' => $solint,
+            'soltv' => $soltv,
             'contrato' => $contrato,
             'status' => $response->status()
         ];
     }
+
+
 
 
 }

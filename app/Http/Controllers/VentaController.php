@@ -466,6 +466,7 @@ class VentaController extends Controller
     public function getComercialPlanPaq(Request $request) {
 
         $Producto = $request->Producto;
+        $Motivo = $request->Motivo;
         $PlanCcialVoz = $request->PlanCcialVoz;
         $PlanCcialInt = $request->PlanCcialInt;
         $PlanCcialTV = $request->PlanCcialTV;
@@ -476,7 +477,7 @@ class VentaController extends Controller
             ->post($url, [
                 "ListaVal" => 'c0nsult4Pl4nC14lP4q',
                 "Filtro" => $Producto,
-                "Filtro2" => null,
+                "Filtro2" => $Motivo,
                 "Filtro3" => $PlanCcialVoz,
                 "Filtro4" => $PlanCcialInt,
                 "Filtro5" => $PlanCcialTV
@@ -490,7 +491,8 @@ class VentaController extends Controller
     {
         $vendedor = $request->session()->get('Vendedor');
 
-        $XmlPaquete =   "<PROD_VOZ>$request->PROD_VOZ</PROD_VOZ>" .
+        $XmlPaquete =   "<CODEMPAQT>1</CODEMPAQT>" .
+                        "<PROD_VOZ>$request->PROD_VOZ</PROD_VOZ>" .
                         "<PROD_INT>$request->PROD_INT</PROD_INT>" .
                         "<PROD_TV>$request->PROD_TV</PROD_TV>" .
                         "<MOT_VTA_VOZ>$request->MOT_VTA_VOZ</MOT_VTA_VOZ>" .
@@ -504,7 +506,6 @@ class VentaController extends Controller
                         "<PLAN_VTA_TV>$request->PLAN_VTA_TV</PLAN_VTA_TV>" .
                         "<VENDEDOR>$vendedor[0]</VENDEDOR>";
 
-        dd($XmlPaquete);
         $url = config('edatel.serviceurl');
         $response = Http::withOptions(['verify' => false,])
             ->asForm()

@@ -74,29 +74,29 @@
                 <div name="productos" id="productos" class="mb-4 mt-2 bg-white overflow-hidden shadow-xl rounded-lg">
                     <!-- Ventana modal productos -->
                     <div class="my-6 ml-4 flex grid grid-cols-2 xl:gap-6">
-                        <a class="py-2 inline-flex">
+                        <a class="py-2 inline-flex" :class="{'text-gray-300': (!form.INC_VOZ_ACT && !form.INC_SOLVOZ), 'text-gray-800' : (form.INC_VOZ_ACT || form.INC_SOLVOZ)}">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mx-2 w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
                             </svg>
-                            <input type="checkbox" @change="valSelTab('voz'); getComercialPlan('voz')" value="1" :disabled="form.INC_VOZ_ACT" v-model="form.INC_VOZ" :class="{'text-gray-300': form.INC_VOZ_ACT, 'border-gray-300': form.INC_VOZ_ACT, 'border-red-600': !form.INC_VOZ_ACT, 'text-red-600' : !form.INC_VOZ_ACT }" class="px-2 w-6 h-6 text-red-600 rounded border-red-600 focus:ring-red-500 focus:ring-2">
+                            <input type="checkbox" @change="valSelTab('voz'); getComercialPlan('voz')" value="1" :disabled="!form.INC_VOZ_ACT && !form.INC_SOLVOZ" v-model="form.INC_VOZ" :class="{'text-gray-300': (!form.INC_VOZ_ACT && !form.INC_SOLVOZ), 'border-gray-300': (!form.INC_VOZ_ACT && !form.INC_SOLVOZ), 'border-red-600': (form.INC_VOZ_ACT || form.INC_SOLVOZ), 'text-red-600' : (form.INC_VOZ_ACT || form.INC_SOLVOZ) }" class="px-2 w-6 h-6 rounded focus:ring-red-500 focus:ring-2">
                             <span class="mx-2">
                                 Voz
                             </span>
                         </a>
-                        <a class="py-2 inline-flex">
+                        <a class="py-2 inline-flex" :class="{'text-gray-300': (!form.INC_INT_ACT && !form.INC_SOLINC), 'text-gray-800' : (form.INC_INT_ACT || form.INC_SOLINC)}">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mx-2 w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 011.06 0z" />
                             </svg>
-                            <input type="checkbox" @change="valSelTab('internet'); getComercialPlan('internet')" value="1" :disabled="form.INC_INT_ACT" :class="{'text-gray-300': form.INC_INT_ACT, 'border-gray-300': form.INC_INT_ACT, 'border-red-600': !form.INC_INT_ACT, 'text-red-600' : !form.INC_INT_ACT }" v-model="form.INC_INT" class="px-2 w-6 h-6 text-red-600 rounded border-red-600 focus:ring-red-500 dfocus:ring-2">
+                            <input type="checkbox" @change="valSelTab('internet'); getComercialPlan('internet')" value="1" :disabled="!form.INC_INT_ACT && !form.INC_SOLINT" :class="{'text-gray-300': (!form.INC_INT_ACT && !form.INC_SOLINT), 'border-gray-300': (!form.INC_INT_ACT && !form.INC_SOLINT), 'border-red-600': (form.INC_INT_ACT || form.INC_SOLINT), 'text-red-600' : (form.INC_INT_ACT || form.INC_SOLINT) }" v-model="form.INC_INT" class="px-2 w-6 h-6 rounded focus:ring-red-500 dfocus:ring-2">
                             <span class="mx-2">
                                 Internet
                             </span>
                         </a>
-                        <a class="inline-flex">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mx-2 w-6 h-6">
+                        <a class="inline-flex" :class="{'text-gray-300': (!form.INC_TV_ACT && !form.INC_SOLTV), 'text-gray-800' : (form.INC_TV_ACT || form.INC_SOLTV)}">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" :class="{'text-gray-300': (!form.INC_TV_ACT && !form.INC_SOLTV)}" class="mx-2 w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 20.25h12m-7.5-3v3m3-3v3m-10.125-3h17.25c.621 0 1.125-.504 1.125-1.125V4.875c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125z" />
                             </svg>
-                            <input type="checkbox" @change="valSelTab('tv'); getComercialPlan('tv')" value="1" :disabled="form.INC_TV_ACT" :class="{'text-gray-300': form.INC_TV_ACT, 'border-gray-300': form.INC_TV_ACT, 'border-red-600': !form.INC_TV_ACT, 'text-red-600' : !form.INC_TV_ACT }" v-model="form.INC_TV" class="px-2 w-6 h-6 text-red-600 rounded border-red-600 focus:ring-red-500 dfocus:ring-2">
+                            <input type="checkbox" @change="valSelTab('tv'); getComercialPlan('tv')" value="1" :disabled="!form.INC_TV_ACT && !form.INC_SOLTV" :class="{'text-gray-300': (!form.INC_TV_ACT && !form.INC_SOLTV), 'border-gray-300': (!form.INC_TV_ACT && !form.INC_SOLTV), 'border-red-600': (form.INC_TV_ACT || form.INC_SOLTV), 'text-red-600' : (form.INC_TV_ACT || form.INC_SOLTV) }" v-model="form.INC_TV" class="px-2 w-6 h-6 rounded focus:ring-red-500 dfocus:ring-2">
                             <span class="mx-2">
                                 TV
                             </span>
@@ -180,7 +180,7 @@
                                         </label>
                                     </div>
                                     <div class="relative z-0 w-full my-2 group">
-                                        <select @change="getSalesPlan(form.PLAN_CCIAL_INT, 'internet'), getVelocidades(form.PLAN_CCIAL_INT)" v-model="form.PLAN_CCIAL_INT" class="block py-4 px-0 w-full text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                                        <select @change="getSalesPlan(form.PLAN_CCIAL_INT, 'internet')" v-model="form.PLAN_CCIAL_INT" class="block py-4 px-0 w-full text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
                                             <option value="0" >Seleccione</option>
                                             <option v-for="opcion in arrayPlanesComInternet" :key="opcion.CODIGO" :value="opcion.CODIGO" v-text="opcion.DESCRIPCION"></option>
                                         </select>
@@ -206,10 +206,16 @@
                         <div v-if="activeTab == 'tv' && form.INC_TV" class="p-2 border-l-2 border-r-2 border-b-2 rounded-lg">
                             <div class="px-4 py-4">
                                 <div class="grid xl:grid-cols-2 xl:gap-6">
-                                    <div class="relative z-0 w-full my-2 group">
+                                    <div v-if="form.INC_TV_ACT && !form.INC_SOLTV" class="relative z-0 w-full my-2 group">
                                         <input type="text" v-model="tv.PRODUCTO" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
                                         <label class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                             Producto
+                                        </label>
+                                    </div>
+                                    <div v-else-if="!form.INC_TV_ACT && form.INC_SOLTV" class="relative z-0 w-full my-2 group">
+                                        <input type="text" v-model="soltv.MOTIVE_ID" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                                        <label class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                            Motivo
                                         </label>
                                     </div>
                                     <div class="relative z-0 w-full my-2 group">
@@ -428,6 +434,9 @@ export default {
                 INC_VOZ: 0,
                 INC_INT: 0,
                 INC_TV: 0,
+                INC_SOLVOZ: 0,
+                INC_SOLINT: 0,
+                INC_SOLTV: 0,
                 EMPAQUETADO: 'N',
                 INC_VOZ_ACT: 0,
                 INC_INT_ACT: 0,
@@ -468,7 +477,31 @@ export default {
                 PLAN_FACTURACION: 0,
                 EMPAQUETADO: 'N',
                 COMERCIAL_PLAN: 0
-            }
+            },
+            solvoz: {
+                PACKAGE_ID: 0,
+                MOTIVE_ID: 0,
+                PRODUCT_TYPE_ID: 0,
+                COMMERCIAL_PLAN_ID: 0,
+                PLANFACT: 0,
+                REQUEST_DATE: ''
+            },
+            solint: {
+                PACKAGE_ID: 0,
+                MOTIVE_ID: 0,
+                PRODUCT_TYPE_ID: 0,
+                COMMERCIAL_PLAN_ID: 0,
+                PLANFACT: 0,
+                REQUEST_DATE: ''
+            },
+            soltv: {
+                PACKAGE_ID: 0,
+                MOTIVE_ID: 0,
+                PRODUCT_TYPE_ID: 0,
+                COMMERCIAL_PLAN_ID: 0,
+                PLANFACT: 0,
+                REQUEST_DATE: ''
+            },
         }
     },
     methods: {
@@ -601,35 +634,77 @@ export default {
             this.$page.props.errors.updatePassword = null;
         },
         reset: function () {
-            this.tituloModal = '';
             this.form.NOMBRE = '';
-            this.form.APELLIDO = '';
             this.form.IDENTIFICACION = '';
-            this.form.TIPO_IDENT = 0;
-            this.form.TIPO_CLIENTE = 0;
-            this.form.SEGMENTO = 0;
-            this.form.TELEFONO = '';
-            this.form.DIRECCION = '';
-            this.form.NOMBRE_CONTACT = '';
-            this.form.TEL_CONTACT = '';
-            this.form.DIR_CONTACT = '';
-            this.form.EMAIL = '';
-            this.form.TEL_MOVIL = '';
-            this.form.CANT_EMPLEADOS = 0;
-            this.form.CANT_SUCURSALES = 0;
-            this.form.CANT_PC = 0;
-            this.form.MEDIO_RECEPCION = 0;
-            this.form.ID_LLAMADA = 0;
-            this.form.AUTORIZA = false;
-            this.form.MED_ESCRITO = false;
-            this.form.MED_SMS = false;
-            this.form.MED_EMAIL = false;
-            this.form.MED_TELEMERCADEO = false;
-            this.form.MED_RED_SOCIAL = false;
-            this.form.VENDEDOR = false;
+            this.form.SUBSCRIPTION_ID = '';
+            this.form.INC_VOZ = 0;
+            this.form.INC_INT = 0;
+            this.form.INC_TV = 0;
+            this.form.INC_SOLVOZ = 0;
+            this.form.INC_SOLINT = 0;
+            this.form.INC_SOLTV = 0;
+            this.form.EMPAQUETADO = 'N';
+            this.form.INC_VOZ_ACT = 0;
+            this.form.INC_INT_ACT = 0;
+            this.form.INC_TV_ACT = 0;
+            this.form.PLAN_CCIAL_LB = 0;
+            this.form.PLAN_VTA_LB = 0;
+            this.form.PLAN_CCIAL_INT = 0;
+            this.form.PLAN_VTA_INT = 0;
+            this.form.PLAN_CCIAL_TV = 0;
+            this.form.PLAN_VTA_TV = 0;
+
+            this.voz.NOMBRE = '';
+            this.voz.IDENTIFICACION = '';
+            this.voz.SUBSCRIPTION_ID = '';
+            this.voz.PRODUCTO = 0;
+            this.voz.TIPO_PRODUCTO = 0;
+            this.voz.PLAN_FACTURACION = 0;
+            this.voz.EMPAQUETADO = 'N';
+            this.voz.COMERCIAL_PLAN = 0;
+
+            this.int.NOMBRE = '';
+            this.int.IDENTIFICACION = '';
+            this.int.SUBSCRIPTION_ID = '';
+            this.int.PRODUCTO = 0;
+            this.int.TIPO_PRODUCTO = 0;
+            this.int.PLAN_FACTURACION = 0;
+            this.int.EMPAQUETADO = 'N';
+            this.int.COMERCIAL_PLAN = 0;
+
+            this.tv.NOMBRE = '';
+            this.tv.IDENTIFICACION = '';
+            this.tv.SUBSCRIPTION_ID = '';
+            this.tv.PRODUCTO = 0;
+            this.tv.TIPO_PRODUCTO = 0;
+            this.tv.PLAN_FACTURACION = 0;
+            this.tv.EMPAQUETADO = 'N';
+            this.tv.COMERCIAL_PLAN = 0;
+
+
+            this.solvoz.PACKAGE_ID = 0;
+            this.solvoz.MOTIVE_ID = 0;
+            this.solvoz.PRODUCT_TYPE_ID = 0;
+            this.solvoz.COMMERCIAL_PLAN_ID = 0;
+            this.solvoz.PLANFACT = 0;
+            this.solvoz.REQUEST_DATE = '';
+
+            this.solint.PACKAGE_ID = 0;
+            this.solint.MOTIVE_ID = 0;
+            this.solint.PRODUCT_TYPE_ID = 0;
+            this.solint.COMMERCIAL_PLAN_ID = 0;
+            this.solint.PLANFACT = 0;
+            this.solint.REQUEST_DATE = '';
+
+            this.soltv.PACKAGE_ID = 0;
+            this.soltv.MOTIVE_ID = 0;
+            this.soltv.PRODUCT_TYPE_ID = 0;
+            this.soltv.COMMERCIAL_PLAN_ID = 0;
+            this.soltv.PLANFACT = 0;
+            this.soltv.REQUEST_DATE = '';
 
             this.errorcreacion = false;
-            this.navState = 'facturacion';
+            this.step = 1;
             this.isValidategeneral = false;
             this.errors = [];
         },
@@ -700,7 +775,7 @@ export default {
             let statuserror = true;
             this.isValidategeneral = false;
 
-            if (this.form.EMPAQUETADO != 'Y') {
+            if (!this.form.EMPAQUETADO) {
                 statuserror =  false;
                 this.errors.EMPAQUETADO = 'Debe realizar un empaquetamiento';
             } else {
@@ -752,13 +827,17 @@ export default {
                 }
             }
 
-
-            if ( (this.form.INC_VOZ?1:0 + this.form.INC_INT?1:0 + this.form.INC_TV?1:0) < 2) {
+            /*
+            let cantProductos = ((this.form.INC_VOZ||this.form.INC_SOLVOZ)?1:0 + (this.form.INC_INT||this.form.INC_SOLINT)?1:0 + (this.form.INC_TV||this.form.INC_SOLTV?1:0));
+            console.log('cantProductos ' + cantProductos);
+            if ( cantProductos < 2) {
                 statuserror =  false;
                 this.errors.INC_VOZ = 'Seleccione por lo menos un duo a empaquetar';
             } else {
                 this.errors.INC_VOZ = null;
             }
+
+             */
 
             if (!statuserror) {
                 Swal.fire({
@@ -781,12 +860,12 @@ export default {
             try {
                 res = await axios.get('/venta/storepaquete', {
                     params: {
-                        PROD_VOZ: this.voz.PRODUCTO,
-                        PROD_INT: this.int.PRODUCTO,
-                        PROD_TV: this.tv.PRODUCTO,
-                        MOT_VTA_VOZ: null,
-                        MOT_VTA_INT: null,
-                        MOT_VTA_TV: null,
+                        PROD_VOZ: this.voz?this.voz.PRODUCTO:null,
+                        PROD_INT: this.int?this.int.PRODUCTO:null,
+                        PROD_TV: this.tv?this.tv.PRODUCTO:null,
+                        MOT_VTA_VOZ: this.solvoz?this.solvoz.MOTIVE_ID:null,
+                        MOT_VTA_INT: this.solint?this.solint.MOTIVE_ID:null,
+                        MOT_VTA_TV: this.soltv?this.soltv.MOTIVE_ID:null,
                         PLAN_CCIAL_VOZ: this.form.PLAN_CCIAL_LB,
                         PLAN_CCIAL_INT: this.form.PLAN_CCIAL_INT,
                         PLAN_CCIAL_TV: this.form.PLAN_CCIAL_TV,
@@ -809,6 +888,7 @@ export default {
                     showConfirmButton: true,
                 })
                 console.log(res.data);
+                this.errorcreacion = 'La solicitud ' + resultado.solicitud + ' ha sido registrada satisfactoriamente';
                 this.reset();
             } else {
                 Swal.fire({
@@ -867,30 +947,31 @@ export default {
         next: function () {
             if (this.valFinish == 'Registrar') {
                 this.save(this.form);
-            }
-            console.log(this.step);
-            this.step += 1;
-            this.getComercialPlan('paquete');
-            switch (this.step) {
-                case 2:
-                    if (this.form.INC_INT) {
-                        this.activeTab = 'internet';
-                    } else if (this.form.INC_TV) {
+            } else {
+                console.log(this.step);
+                this.step += 1;
+                this.getComercialPlan('paquete');
+                switch (this.step) {
+                    case 2:
+                        if (this.form.INC_INT || this.form.INC_SOLINT) {
+                            this.activeTab = 'internet';
+                        } else if (this.form.INC_TV || this.form.INC_SOLTV) {
+                            this.activeTab = 'tv';
+                        }
+                        break;
+                    case 3:
                         this.activeTab = 'tv';
-                    }
-                    break;
-                case 3:
-                    this.activeTab = 'tv';
-                    break;
+                        break;
+                }
             }
         },
         prev: function () {
             this.step -= 1;
             switch (this.step) {
                 case 1:
-                    if (this.form.INC_VOZ) {
+                    if (this.form.INC_VOZ || this.form.INC_SOLVOZ) {
                         this.activeTab = 'voz';
-                    } else if (this.form.INC_INT) {
+                    } else if (this.form.INC_INT || this.form.INC_SOLINT) {
                         this.activeTab = 'internet';
                     }
                     break;
@@ -902,6 +983,7 @@ export default {
         getComercialPlan: async function () {
             this.loading = true;
             let Producto = null;
+            let Motivo = null;
             let PlanCcialVoz = null;
             let PlanCcialInt = null;
             let PlanCcialTV = null;
@@ -914,32 +996,55 @@ export default {
 
                 switch (this.step) {
                     case 1:
-                        if (this.form.INC_VOZ) {
-                            Producto = this.voz.PRODUCTO;
+                        if (this.form.INC_VOZ || this.form.INC_SOLVOZ) {
+                            if (this.form.INC_VOZ_ACT) {
+                                Producto = this.voz.PRODUCTO;
+                                Motivo = null;
+                            } else {
+                                Motivo = this.solvoz.MOTIVE_ID;
+                                Producto = null;
+                            }
                             PlanCcialVoz = null;
                             PlanCcialInt = null;
                             PlanCcialTV = null;
-                        } else if (this.form.INC_INT) {
-                            Producto = this.int.PRODUCTO;
+                        } else if (this.form.INC_INT || this.form.INC_SOLINT) {
+                            if (this.form.INC_INT_ACT) {
+                                Producto = this.int.PRODUCTO;
+                                Motivo = null;
+                            } else {
+                                Motivo = this.solint.MOTIVE_ID;
+                                Producto = null;
+                            }
                             PlanCcialVoz = null;
                             PlanCcialInt = null;
                             PlanCcialTV = null;
                         }
                         break;
                     case 2:
-                        if (this.form.INC_INT) {
-                            Producto = this.int.PRODUCTO;
+                        if (this.form.INC_INT || this.form.INC_SOLINT) {
+                            if (this.form.INC_INT_ACT) {
+                                Producto = this.int.PRODUCTO;
+                                Motivo = null;
+                            } else {
+                                Motivo = this.solint.MOTIVE_ID;
+                                Producto = null;
+                            }
                             PlanCcialVoz = this.form.PLAN_CCIAL_LB;
                             PlanCcialInt = null;
                             PlanCcialTV = null;
-                        } else if (this.form.INC_TV) {
-                            if (this.form.INC_VOZ) {
+                        } else if (this.form.INC_TV || this.form.INC_SOLTV) {
+                            if (this.form.INC_TV_ACT) {
                                 Producto = this.tv.PRODUCTO;
+                                Motivo = null;
+                            } else {
+                                Motivo = this.soltv.MOTIVE_ID;
+                                Producto = null;
+                            }
+                            if (this.form.INC_VOZ) {
                                 PlanCcialVoz = this.form.PLAN_CCIAL_LB;
                                 PlanCcialInt = null;
                                 PlanCcialTV = null;
                             } else {
-                                Producto = this.tv.PRODUCTO;
                                 PlanCcialVoz = null;
                                 PlanCcialInt = this.form.PLAN_CCIAL_INT;
                                 PlanCcialTV = null;
@@ -947,7 +1052,13 @@ export default {
                         }
                         break;
                     case 3:
-                        Producto = this.tv.PRODUCTO;
+                        if (this.form.INC_TV_ACT) {
+                            Producto = this.tv.PRODUCTO;
+                            Motivo = null;
+                        } else {
+                            Motivo = this.soltv.MOTIVE_ID;
+                            Producto = null;
+                        }
                         PlanCcialVoz = this.form.PLAN_CCIAL_LB;
                         PlanCcialInt = this.form.PLAN_CCIAL_INT;
                         PlanCcialTV = null;
@@ -958,6 +1069,7 @@ export default {
                     res = await axios.get('/venta/getComercialPlanPaq', {
                         params: {
                             Producto: Producto,
+                            Motivo: Motivo,
                             PlanCcialVoz: PlanCcialVoz,
                             PlanCcialInt: PlanCcialInt,
                             PlanCcialTV: PlanCcialTV,
@@ -973,22 +1085,23 @@ export default {
                 //this.arrayPlanesComInternet = [];
 
                 console.log('producto ' + Producto);
+                console.log('motivo ' + Motivo);
                 console.log('plan comercial voz ' + PlanCcialVoz);
                 console.log('plan comercial int ' + PlanCcialInt);
                 console.log('plan comercial tv ' + PlanCcialTV);
 
                 switch (this.step) {
                     case 1:
-                        if (this.form.INC_VOZ) {
+                        if (this.form.INC_VOZ || this.form.INC_SOLVOZ) {
                             this.arrayPlanesComVoz = res.data.planescomm;
-                        } else if (this.form.INC_INT) {
+                        } else if (this.form.INC_INT || this.form.INC_SOLINT) {
                             this.arrayPlanesComInternet = res.data.planescomm;
                         }
                         break;
                     case 2:
-                        if (this.form.INC_INT) {
+                        if (this.form.INC_INT || this.form.INC_SOLINT) {
                             this.arrayPlanesComInternet = res.data.planescomm;
-                        } else if (this.form.INC_TV) {
+                        } else if (this.form.INC_TV || this.form.INC_SOLTV) {
                             this.arrayPlanesComTv = res.data.planescomm;
                         }
                         break;
@@ -1140,6 +1253,10 @@ export default {
                 this.voz = res.data.voz;
                 this.int = res.data.int;
                 this.tv = res.data.tv;
+
+                this.solvoz = res.data.solvoz;
+                this.solint = res.data.solint;
+                this.soltv = res.data.soltv;
 
                 this.form.PLAN_CCIAL_LB = 0;
                 this.form.PLAN_VTA_LB = 0;
