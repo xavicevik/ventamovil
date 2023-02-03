@@ -17,12 +17,14 @@
         >
             <!-- Logo -->
             <div class="flex-shrink-0 py-2">
-                <a href="#">
-                    <img
-                        class="w-10 h-auto"
-                        src="storage/img/tigo_une_logo.jpg"
-                        alt="VentaMovil"
-                    />
+                <a href="/">
+                    <button>
+                        <img
+                            class="w-10 h-auto"
+                            src="storage/img/tigo_une_logo.jpg"
+                            alt="VentaMovil"
+                        />
+                    </button>
                 </a>
             </div>
             <div class="flex flex-col items-center flex-1 p-2 space-y-4">
@@ -44,52 +46,6 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
                     </svg>
                 </button>
-                <!-- Messages button -->
-                <button
-                    @click="(isSidebarOpen && currentSidebarTab == 'messagesTab') ? isSidebarOpen = false : isSidebarOpen = true; currentSidebarTab = 'messagesTab'"
-                    class="p-2 transition-colors rounded-lg shadow-md hover:bg-indigo-800 hover:text-white focus:outline-none focus:ring focus:ring-indigo-600 focus:ring-offset-white focus:ring-offset-2"
-                    :class="(isSidebarOpen && currentSidebarTab == 'messagesTab') ? 'text-white bg-indigo-600' : 'text-gray-500 bg-white'"
-                >
-                    <span class="sr-only">Toggle message panel</span>
-                    <svg
-                        aria-hidden="true"
-                        class="w-6 h-6"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-                        />
-                    </svg>
-                </button>
-                <!-- Notifications button -->
-                <button
-                    @click="(isSidebarOpen && currentSidebarTab == 'notificationsTab') ? isSidebarOpen = false : isSidebarOpen = true; currentSidebarTab = 'notificationsTab'"
-                    class="p-2 transition-colors rounded-lg shadow-md hover:bg-indigo-800 hover:text-white focus:outline-none focus:ring focus:ring-indigo-600 focus:ring-offset-white focus:ring-offset-2"
-                    :class="(isSidebarOpen && currentSidebarTab == 'notificationsTab') ? 'text-white bg-indigo-600' : 'text-gray-500 bg-white'"
-                >
-                    <span class="sr-only">Toggle notifications panel</span>
-                    <svg
-                        aria-hidden="true"
-                        class="w-6 h-6"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                        />
-                    </svg>
-                </button>
             </div>
 
             <!-- User avatar -->
@@ -98,12 +54,13 @@
                     @click="isOpen = !isOpen; $nextTick(() => {isOpen ? $refs.userMenu.focus() : null})"
                     class="transition-opacity rounded-lg opacity-80 hover:opacity-100 focus:outline-none focus:ring focus:ring-indigo-600 focus:ring-offset-white focus:ring-offset-2"
                 >
+
                     <img
-                        class="w-10 h-10 rounded-lg shadow-md"
-                        src="https://avatars.githubusercontent.com/u/57622665?s=460&u=8f581f4c4acd4c18c33a87b3e6476112325e8b38&v=4"
-                        alt="Ahmed Kamel"
+                         class="w-10 h-10 rounded-lg shadow-md"
+                         src="storage/profile-photos/avatar2.png"
                     />
-                    <span class="sr-only">User menu</span>
+
+                    <span class="sr-only">Menú de Usuario</span>
                 </button>
                 <div
                     v-if="isOpen"
@@ -116,13 +73,13 @@
                     aria-orientation="vertical"
                     aria-label="user menu"
                 >
-                    <a href="/user/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
-                    >Your Profile</a
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
+                    >Perfil</a
                     >
 
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Settings</a>
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Configuración</a>
 
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Sign out</a>
+                    <a href="#" @click="logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Salir</a>
                 </div>
             </div>
         </nav>
@@ -142,12 +99,14 @@
                 <nav v-if="currentSidebarTab == 'linksTab'" aria-label="Main" class="flex flex-col h-full">
                     <!-- Logo -->
                     <div class="mx-auto items-center justify-center py-4">
-                        <a href="#">
-                            <img
-                                class="w-24 h-auto"
-                                src="storage/img/tigo_une_logo.jpg"
-                                alt="VentaMovil"
-                            />
+                        <a href="/">
+                            <button>
+                                <img
+                                    class="w-24 h-auto"
+                                    src="storage/img/tigo_une_logo.jpg"
+                                    alt="VentaMovil"
+                                />
+                            </button>
                         </a>
                         <div class="mx-auto">
                             Venta Movil Edatel
@@ -165,7 +124,7 @@
                             <span>Clientes</span>
                         </a>
                         <a
-                            href="#"
+                            :href="route('venta.create')"
                             class="flex items-center space-x-2 text-white bg-blue-600 transition-colors rounded-lg group hover:bg-indigo-600 hover:text-white"
                         >
                             <span
@@ -173,13 +132,13 @@
                                 class="p-2 transition-colors bg-red-700 text-white rounded-lg group-hover:bg-indigo-700 group-hover:text-white"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
                                 </svg>
                             </span>
-                            <span>Consulta de contratos</span>
+                            <span>Ventas</span>
                         </a>
                         <a
-                            href="#"
+                            :href="route('velocidad.changeSpeed')"
                             class="flex items-center space-x-2 text-white bg-blue-600 transition-colors rounded-lg group hover:bg-indigo-600 hover:text-white"
                         >
                             <span
@@ -187,13 +146,13 @@
                               class="p-2 transition-colors bg-red-700 text-white rounded-lg group-hover:bg-indigo-700 group-hover:text-white"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 8.688c0-.864.933-1.405 1.683-.977l7.108 4.062a1.125 1.125 0 010 1.953l-7.108 4.062A1.125 1.125 0 013 16.81V8.688zM12.75 8.688c0-.864.933-1.405 1.683-.977l7.108 4.062a1.125 1.125 0 010 1.953l-7.108 4.062a1.125 1.125 0 01-1.683-.977V8.688z" />
                                 </svg>
                             </span>
-                            <span>Registro</span>
+                            <span>Cambios de velocidad</span>
                         </a>
                         <a
-                            href="#"
+                            :href="route('venta.paquete')"
                             class="flex items-center space-x-2 text-white bg-blue-600 transition-colors rounded-lg group hover:bg-indigo-600 hover:text-white"
                         >
                             <span
@@ -205,10 +164,10 @@
                                 </svg>
 
                             </span>
-                            <span>Productos</span>
+                            <span>Empaquetamientos</span>
                         </a>
                         <a
-                            :href="route('venta.create')"
+                            :href="route('solicitudes')"
                             class="flex items-center space-x-2 text-white bg-blue-600 transition-colors rounded-lg group hover:bg-indigo-600 hover:text-white"
                         >
                             <span
@@ -216,26 +175,11 @@
                                 class="p-2 transition-colors bg-red-700 text-white rounded-lg group-hover:bg-indigo-700 group-hover:text-white"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25M16.5 7.5V18a2.25 2.25 0 002.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 002.25 2.25h13.5M6 7.5h3v3H6v-3z" />
                                 </svg>
 
                             </span>
-                            <span>Venta</span>
-                        </a>
-                        <a
-                            href="#"
-                            class="flex items-center space-x-2 text-white bg-blue-600 transition-colors rounded-lg group hover:bg-indigo-600 hover:text-white"
-                        >
-                            <span
-                                aria-hidden="true"
-                                class="p-2 transition-colors bg-red-700 text-white rounded-lg group-hover:bg-indigo-700 group-hover:text-white"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 16.875h3.375m0 0h3.375m-3.375 0V13.5m0 3.375v3.375M6 10.5h2.25a2.25 2.25 0 002.25-2.25V6a2.25 2.25 0 00-2.25-2.25H6A2.25 2.25 0 003.75 6v2.25A2.25 2.25 0 006 10.5zm0 9.75h2.25A2.25 2.25 0 0010.5 18v-2.25a2.25 2.25 0 00-2.25-2.25H6a2.25 2.25 0 00-2.25 2.25V18A2.25 2.25 0 006 20.25zm9.75-9.75H18a2.25 2.25 0 002.25-2.25V6A2.25 2.25 0 0018 3.75h-2.25A2.25 2.25 0 0013.5 6v2.25a2.25 2.25 0 002.25 2.25z" />
-                                </svg>
-
-                            </span>
-                            <span>Empaquetar</span>
+                            <span>Solicitudes</span>
                         </a>
                         <a
                             href="#"
@@ -258,7 +202,7 @@
 
                     <footer class="text-center text-white">
                         <div class="text-center text-blue-800 p-4 text-sm">
-                            © 2022 Copyright<br>
+                            © 2023 Copyright<br>
                             <a class="text-gray-800 text-sm" href="">Venta Movil v2.0</a>
                         </div>
                     </footer>
@@ -267,12 +211,22 @@
         </transition>
     </div>
     <div class="flex flex-col flex-1">
-        <header class="relative flex items-center justify-between flex-shrink-0 w-full">
-            <div>
-                <img
-                    src="storage/img/logo_fondo.jpg"
-                    alt="VentaMovil"
-                />
+        <header class="relative  items-center justify-between flex-shrink-0 w-full">
+            <div class="mx-auto">
+                <a href="/">
+                    <button>
+                        <img
+                            class="flex sm:hidden"
+                            src="storage/img/logo_fondo.jpg"
+                            alt="VentaMovil"
+                        />
+                        <img
+                            class="hidden sm:flex w-full px-4 rounded"
+                            src="storage/img/logo.jpg"
+                            alt="VentaMovil"
+                        />
+                    </button>
+                </a>
             </div>
         </header>
 
@@ -321,8 +275,10 @@
                     @click="isOpen = !isOpen; $nextTick(() => {isOpen ? $refs.userMenu.focus() : null})"
                     class="transition-opacity rounded-lg opacity-80 hover:opacity-100 focus:outline-none focus:ring focus:ring-indigo-600 focus:ring-offset-white focus:ring-offset-2"
                 >
-                    <img v-if="$page.props.user.profile_photo_path" class="w-8 md:w-8 mr-2 rounded-md overflow-hidden" :src="'../storage/' + $page.props.user.profile_photo_path" />
-                    <img v-else class="w-8 h-8 md:w-7 md:h-7 mr-2 rounded-md overflow-hidden" src="https://therminic2018.eu/wp-content/uploads/2018/07/dummy-avatar.jpg" />
+                    <img
+                        class="w-8 md:w-8 mr-2 rounded-md overflow-hidden"
+                        src="storage/profile-photos/avatar2.png"
+                    />
 
                     <span class="sr-only">Menú Usuario</span>
                 </button>
@@ -337,13 +293,13 @@
                     aria-orientation="vertical"
                     aria-label="user menu"
                 >
-                    <a href="/user/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
                     >Perfil</a
                     >
 
                     <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Configuración</a>
 
-                    <a href="*" @click="logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Salir</a>
+                    <a href="#" @click="logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Salir</a>
                 </div>
             </div>
         </nav>
@@ -370,10 +326,12 @@
 <script>
 
 import {Inertia} from "@inertiajs/inertia";
+import Button from "../Jetstream/Button";
 
 export default {
 
     components: {
+        Button
 
     },
     props:{

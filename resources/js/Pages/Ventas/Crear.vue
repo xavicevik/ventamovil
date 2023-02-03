@@ -4,38 +4,41 @@
 
         </template>
 
-        <!-- Mobile sub header -->
-        <div
-            class="flex items-center justify-between p-2 bg-white rounded-md text-sm shadow-lg top-16 left-5 right-5"
-        >
-            <!-- Seetings button -->
-            <a href="#facturacion">
-                <button
-                    class="p-2 text-white bg-red-600 rounded-lg shadow-md hover:text-white hover:bg-blue-700 focus:outline-none focus:ring focus:ring-white focus:ring-offset-gray-100 focus:ring-offset-4"
-                    :class="{'text-white bg-blue-700': navState == 'facturacion'}"
-                >
-                    <span class="">Facturación</span>
+        <div class="w-full px-0 rounded-lg sm:px-4">
 
-                </button>
-            </a>
-            <!-- Messages button -->
-            <a href="#localizacion">
-                <button
-                    class="p-2 text-white bg-red-600 rounded-lg shadow-md hover:text-white hover:bg-blue-700 focus:outline-none focus:ring focus:ring-white focus:ring-offset-gray-100 focus:ring-offset-4"
-                    :class="{'text-white bg-blue-700': navState == 'localizacion'}"
-                >
-                    <span class="">Localización</span>
-                </button>
-            </a>
-            <!-- Notifications button -->
-            <a href="#productos">
-                <button
-                    class="p-2 text-white bg-red-600 rounded-lg shadow-md hover:text-white hover:bg-blue-700 focus:outline-none focus:ring focus:ring-white focus:ring-offset-gray-100 focus:ring-offset-4"
-                    :class="{'text-white bg-blue-700': navState == 'productos'}"
-                >
-                    <span class="">Productos</span>
-                </button>
-            </a>
+            <!-- Mobile sub header -->
+            <div
+                class="flex items-center justify-between p-2 px-4 bg-white rounded-md text-sm shadow-lg top-16 left-5 right-5"
+            >
+                <!-- Seetings button -->
+                <a href="#facturacion">
+                    <button
+                        class="p-2 text-white bg-red-600 rounded-lg shadow-md hover:text-white hover:bg-blue-700 focus:outline-none focus:ring focus:ring-white focus:ring-offset-gray-100 focus:ring-offset-4"
+                        :class="{'text-white bg-blue-700': navState == 'facturacion'}"
+                    >
+                        <span class="">Facturación</span>
+
+                    </button>
+                </a>
+                <!-- Messages button -->
+                <a href="#localizacion">
+                    <button
+                        class="p-2 text-white bg-red-600 rounded-lg shadow-md hover:text-white hover:bg-blue-700 focus:outline-none focus:ring focus:ring-white focus:ring-offset-gray-100 focus:ring-offset-4"
+                        :class="{'text-white bg-blue-700': navState == 'localizacion'}"
+                    >
+                        <span class="">Localización</span>
+                    </button>
+                </a>
+                <!-- Notifications button -->
+                <a href="#productos">
+                    <button
+                        class="p-2 text-white bg-red-600 rounded-lg shadow-md hover:text-white hover:bg-blue-700 focus:outline-none focus:ring focus:ring-white focus:ring-offset-gray-100 focus:ring-offset-4"
+                        :class="{'text-white bg-blue-700': navState == 'productos'}"
+                    >
+                        <span class="">Productos</span>
+                    </button>
+                </a>
+            </div>
         </div>
         <section>
             <div @click="cleanMessage()" mx-auto class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md my-3" role="alert" v-show="errorcreacion">
@@ -45,21 +48,6 @@
                     </div>
                 </div>
             </div>
-        </section>
-        <section v-if="false">
-            <!-- validateRifa <form> -->
-            <div class="bg-white fixed h-screen items-center pb-1 mx-auto items-center w-full">
-                <div class="">
-                    <!-- Formulario -->
-                    <section>
-                        <div class="absolute mt-10 w-full" id="appx">
-                            <semipolar-spinner class="mt-10 mx-auto" :animation-duration="2000" :size="85" color="#ff1d5e" />
-                        </div>
-                    </section>
-                    <!-- Fin formulario -->
-                </div>
-            </div>
-            <!-- </form> -->
         </section>
         <div class="w-full pt-2 pb-10 px-2 rounded-lg lg:px-4 md:px-2 sm:px-2">
 
@@ -922,108 +910,8 @@ export default {
         }
     },
     methods: {
-        cambiarPass: function(){
-            this.isOpencambiopass = true;
-        } ,
-        updatePass: function(data) {
-            this.$inertia.post('/changepasssu', data, {
-                onSuccess: (page) => {
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'Se ha cambiado la contraseña',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                    this.formpasswd.id = 0;
-                    this.formpasswd.password = '';
-                    this.formpasswd.password_confirmation = '';
-                    this.isOpencambiopass = false;
-                    this.getUsers('','nombre');
-                    this.editMode = false;
-                    this.closeModal();
-                },
-            });
-        },
         openModal: function (accion, data = []) {
             switch (accion) {
-                case 'registrar':
-                {
-                    this.reset();
-                    this.tituloModal = 'Crear nuevo Usuario';
-                    this.form.idpais = 0;
-                    this.form.iddepartamento = 0;
-                    this.form.idciudad = 0;
-                    this.form.idtipos_documento = 0;
-                    this.form.idrol = 0;
-                    this.form.idempresa = 0;
-                    this.getRoles();
-                    this.getPaises();
-                    this.getCiudades();
-                    this.getDepartamentos();
-                    this.getTiposdocumento();
-                    this.newMode = true;
-                    this.verMode = false;
-                    this.editMode = false;
-                    break;
-                }
-                case 'ver': {
-                    this.tituloModal = 'Ver Usuario ' + data['username'];
-                    this.form.idpais = data['idpais'];
-                    this.form.iddepartamento = data['iddepartamento'];
-                    this.form.idciudad = data['idciudad'];
-                    this.form.idtipos_documento = data['idtipos_documento'];
-                    this.form.idrol = data['idrol'];
-                    this.form.idempresa = data['idempresa'];
-                    this.form.nombre = data['nombre'];
-                    this.form.apellido = data['apellido'];
-                    this.form.correo = data['correo'];
-                    this.form.movil = data['movil'];
-                    this.form.documento = data['documento'];
-                    this.form.username = data['username'];
-                    this.form.direccion = data['direccion'];
-                    this.form.telefono = data['telefono'];
-                    this.getRoles();
-                    this.getPaises();
-                    this.getCiudades();
-                    this.getDepartamentos();
-                    this.getTiposdocumento();
-                    this.getEmpresas();
-                    this.newMode = false;
-                    this.verMode = true;
-                    this.editMode = false;
-                    break;
-                    break;
-                }
-                case 'actualizar': {
-                    this.form.id = data['id'];
-                    this.tituloModal = 'Actualizar Usuario ' + data['username'];
-                    this.form.idpais = data['idpais'];
-                    this.form.iddepartamento = data['iddepartamento'];
-                    this.form.idciudad = data['idciudad'];
-                    this.form.idtipos_documento = data['idtipos_documento'];
-                    this.form.idrol = data['idrol'];
-                    this.form.idempresa = data['idempresa'];
-                    this.form.nombre = data['nombre'];
-                    this.form.apellido = data['apellido'];
-                    this.form.correo = data['correo'];
-                    this.form.movil = data['movil'];
-                    this.form.documento = data['documento'];
-                    this.form.username = data['username'];
-                    this.form.direccion = data['direccion'];
-                    this.form.telefono = data['telefono'];
-                    this.getRoles();
-                    this.getPaises();
-                    this.getCiudades();
-                    this.getDepartamentos();
-                    this.getTiposdocumento();
-                    this.getEmpresas();
-                    this.newMode = false;
-                    this.verMode = false;
-                    this.editMode = true;
-                    break;
-                    break;
-                }
                 case 'dirinsta':
                     this.isOpenModalDirInsta = true;
                     break;
@@ -1051,58 +939,114 @@ export default {
             this.$page.props.errors.updatePassword = null;
         },
         reset: function () {
-            this.tituloModal = '';
+            this.cliente.NOMBRE = '';
+            this.cliente.APELLIDO = '';
+            this.cliente.IDENTIFICACION = '';
+            this.cliente.TIPO_IDENT = 0;
+            this.cliente.TIPO_CLIENTE = 0;
+            this.cliente.SEGMENTO = 0;
+            this.cliente.TELEFONO = '';
+            this.cliente.DIRECCION = '';
+            this.cliente.NOMBRE_CONTACT = '';
+            this.cliente.TEL_CONTACT = '';
+            this.cliente.DIR_CONTACT = '';
+            this.cliente.EMAIL = '';
+            this.cliente.TEL_MOVIL = '';
+            this.cliente.CANT_EMPLEADOS = 0;
+            this.cliente.CANT_SUCURSALES = 0;
+            this.cliente.CANT_PC = 0;
+            this.cliente.MEDIO_RECEPCION = 0;
+            this.cliente.ID_LLAMADA = 0;
+            this.cliente.AUTORIZA = false;
+            this.cliente.MED_ESCRITO = false;
+            this.cliente.MED_SMS = false;
+            this.cliente.MED_EMAIL = false;
+            this.cliente.MED_TELEMERCADEO = false;
+            this.cliente.MED_RED_SOCIAL = false;
+            this.cliente.VENDEDOR = false;
+
+
             this.form.NOMBRE = '';
             this.form.APELLIDO = '';
             this.form.IDENTIFICACION = '';
             this.form.TIPO_IDENT = 0;
             this.form.TIPO_CLIENTE = 0;
             this.form.SEGMENTO = 0;
-            this.form.TELEFONO = '';
+            this.form.CICLO = 0;
+            this.form.INC_VOZ = 0;
+            this.form.INC_INT = 0;
+            this.form.INC_TV = 0;
+            this.form.EMPAQUETAR = 0;
+            this.form.PLAN_CCIAL_LB = 0;
+            this.form.PLAN_VTA_LB = 0;
+            this.form.APL_DCTO_LB = 'N';
+            this.form.PLAN_CCIAL_INT = 0;
+            this.form.PLAN_VTA_INT = 0;
+            this.form.APL_DCTO_INT = 'N';
+            this.form.PLAN_CCIAL_TV = 0;
+            this.form.PLAN_VTA_TV = 0;
+            this.form.APL_DCTO_TV = 'N';
+            this.form.TECNOLOGIA = 0;
+            this.form.ESTRATO = 0;
+            this.form.LOCALIDAD = 0;
             this.form.DIRECCION = '';
-            this.form.NOMBRE_CONTACT = '';
-            this.form.TEL_CONTACT = '';
-            this.form.DIR_CONTACT = '';
-            this.form.EMAIL = '';
-            this.form.TEL_MOVIL = '';
-            this.form.CANT_EMPLEADOS = 0;
-            this.form.CANT_SUCURSALES = 0;
-            this.form.CANT_PC = 0;
-            this.form.MEDIO_RECEPCION = 0;
-            this.form.ID_LLAMADA = 0;
-            this.form.AUTORIZA = false;
-            this.form.MED_ESCRITO = false;
-            this.form.MED_SMS = false;
-            this.form.MED_EMAIL = false;
-            this.form.MED_TELEMERCADEO = false;
-            this.form.MED_RED_SOCIAL = false;
-            this.form.VENDEDOR = false;
+            this.form.BARRIO = 0;
+            this.form.LOCALIDAD_COBR = 0;
+            this.form.DIRECCION_COBR = '';
+            this.form.BARRIO_COBR = 0;
+            this.form.PROD_BASE = '';
+            this.form.PAQUETE_SS = 0;
+            this.form.RETRICCION = '';
+            this.form.VELOCIDAD = 0;
+            this.form.PAQ_TELEVISION = '';
+            this.form.DECOS_ST = 0;
+            this.form.DECOS_HD = 0;
+            this.form.VENDEDOR = 0;
+            this.form.PRODUCTO_BASE = '';
+            this.form.COOR_X = 0;
+            this.form.COOR_Y = 0;
+            this.form.OBSERVACIONES = '';
+            this.form.SECTOR = '';
+            this.form.CONTADOR = '';
+            this.form.DTH = 0;
+            this.form.NUMERO_PRIVADO = 0;
+            this.form.WIFIPROINCLUIDO = 0;
+            this.form.WIFIPROARRIENDO = 0;
+            this.form.WIFIPROFIDELIZA = 0;
+            this.form.COMPLEMENTO_DIRECCION_CBR = '';
+            this.form.COMPLEMENTO_DIRECCION_INST = '';
+
 
             this.errorcreacion = false;
             this.navState = 'facturacion';
             this.isValidategeneral = false;
-            this.errors = [];
+
+            this.errors.NOMBRE = null;
+            this.errors.APELLIDO = null;
+            this.errors.IDENTIFICACION = null;
+            this.errors.TIPO_IDENT = null;
+            this.errors.TIPO_CLIENTE = null;
+            this.errors.SEGMENTO = null;
+            this.errors.TELEFONO = null;
+            this.errors.DIRECCION = null;
+            this.errors.NOMBRE_CONTACT = null;
+            this.errors.TEL_CONTACT = null;
+            this.errors.DIR_CONTACT = null;
+            this.errors.EMAIL = null;
+            this.errors.TEL_MOVIL = null;
+            this.errors.CANT_EMPLEADOS = null;
+            this.errors.CANT_SUCURSALES = null;
+            this.errors.CANT_PC = null;
+            this.errors.MEDIO_RECEPCION = null;
+            this.errors.ID_LLAMADA = null;
+            this.errors.AUTORIZA = null;
+            this.errors.MED_ESCRITO = null;
+            this.errors.MED_SMS = null;
+            this.errors.MED_EMAIL = null;
+            this.errors.MED_TELEMERCADEO = null;
+            this.errors.MED_RED_SOCIAL = null;
+            this.errors.VENDEDOR = null;
         },
-        savex: function (data) {
-            this.$inertia.post('/users', data, {
-                onSuccess: (page) => {
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'El usuario se ha creado',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                    this.reset();
-                    this.closeModal();
-                    this.getUsers('','nombre');
-                    this.editMode = false;
-                },
-            });
-
-        },
-
-
         crearDireccion: async function (opcion, direccion, barrio) {
             this.loading = true;
             let statuserror = true;
@@ -1164,7 +1108,6 @@ export default {
             this.loading = false;
         },
         save: async function (form) {
-            this.loading = true;
             let statuserror = true;
             this.isValidategeneral = false;
 
@@ -1347,16 +1290,18 @@ export default {
             });
 
             console.log('creación de solicitud de venta');
+            this.loading = true;
 
             let res;
             try {
-                res = await axios.post('/venta/store', {
+                res = await axios.get('/venta/store', {
                     params: {
                         XmlVenta: this.form
                     }
                 });
             } catch (error) {
                 console.log(error);
+                this.loading = false;
                 return false;
             }
 
@@ -1382,30 +1327,47 @@ export default {
             this.loading = false;
         },
         getCliente: async function (tipocliente, tipoident, identificacion) {
-            this.loading = true;
-            console.log('consultar cliente');
-            let res;
-            try {
-                res = await axios.get('/cliente/getCliente', {
-                    params: {
-                        tipocliente: tipocliente,
-                        tipoident: tipoident,
-                        identificacion: identificacion
+            if (identificacion == null || identificacion == '') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Ingrese el documento del cliente',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            } else {
+                this.loading = true;
+                console.log('consultar cliente');
+                let res;
+                try {
+                    res = await axios.get('/cliente/getCliente', {
+                        params: {
+                            tipocliente: tipocliente,
+                            tipoident: tipoident,
+                            identificacion: identificacion
+                        }
+                    });
+                } catch (error) {
+                    console.log(error);
+                    this.loading = false;
+                    return false;
+                }
+                console.log(res.data.data);
+                if (res.data.data != null) {
+                    if (res.data.data[0].SUBSCRIBER_ID > 0) {
+                        this.cliente = res.data.data[0];
+                        this.segmento = res.data.segmento;
+                        this.tipocliente = res.data.tipocliente;
+                        this.form.NOMBRE = this.cliente.NOMBRE;
+                        this.form.APELLIDO = this.cliente.APELLIDO;
+                        this.form.SEGMENTO = this.cliente.SEGMENTO;
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'El cliente no existe',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
                     }
-                });
-            } catch (error) {
-                console.log(error);
-                return false;
-            }
-            console.log(res.data.data);
-            if (res.data.data != null) {
-                if (res.data.data[0].SUBSCRIBER_ID > 0) {
-                    this.cliente = res.data.data[0];
-                    this.segmento = res.data.segmento;
-                    this.tipocliente = res.data.tipocliente;
-                    this.form.NOMBRE = this.cliente.NOMBRE;
-                    this.form.APELLIDO = this.cliente.APELLIDO;
-                    this.form.SEGMENTO = this.cliente.SEGMENTO;
                 } else {
                     Swal.fire({
                         icon: 'warning',
@@ -1414,15 +1376,8 @@ export default {
                         timer: 1500
                     })
                 }
-            } else {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'El cliente no existe',
-                    showConfirmButton: false,
-                    timer: 1500
-                })
+                this.loading = false;
             }
-            this.loading = false;
         },
         next: function (option) {
             switch (option) {
@@ -1553,6 +1508,7 @@ export default {
                     });
                 } catch (error) {
                     console.log(error);
+                    this.loading = false;
                     return false;
                 }
                 console.log(res.data);
@@ -1598,6 +1554,7 @@ export default {
                 });
             } catch (error) {
                 console.log(error);
+                this.loading = false;
                 return false;
             }
             console.log(res.data);
@@ -1636,6 +1593,7 @@ export default {
                 });
             } catch (error) {
                 console.log(error);
+                this.loading = false;
                 return false;
             }
             console.log(res.data);
@@ -1656,6 +1614,7 @@ export default {
 
         getVelocidades: async function (plancomercial) {
             console.log('consultar velocidad');
+            this.loading = true;
             let res;
             try {
                 res = await axios.get('/venta/getVelocidades', {
@@ -1665,8 +1624,10 @@ export default {
                 });
             } catch (error) {
                 console.log(error);
+                this.loading = false;
                 return false;
             }
+            this.loading = false;
             console.log(res.data);
             this.arrayVelocidadesInt = res.data.planes;
         },

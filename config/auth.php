@@ -44,14 +44,6 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-        'cliente' => [
-            'driver' => 'session',
-            'provider' => 'clientes',
-        ],
-        'vendedor' => [
-            'driver' => 'session',
-            'provider' => 'vendedors',
-        ]
     ],
 
     /*
@@ -77,15 +69,6 @@ return [
             'model' => App\Models\User::class,
         ],
 
-        'vendedors' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Vendedor::class,
-        ],
-
-        'clientes' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Cliente::class,
-        ],
 
         // 'users' => [
         //     'driver' => 'database',
@@ -111,18 +94,6 @@ return [
     'passwords' => [
         'users' => [
             'provider' => 'users',
-            'table' => 'password_resets',
-            'expire' => 60,
-            'throttle' => 60,
-        ],
-        'vendedors' => [
-            'provider' => 'vendedors',
-            'table' => 'password_resets',
-            'expire' => 60,
-            'throttle' => 60,
-        ],
-        'clientes' => [
-            'provider' => 'clientes',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,

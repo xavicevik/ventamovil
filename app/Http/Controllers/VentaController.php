@@ -265,15 +265,12 @@ class VentaController extends Controller
 
         //dd($XmlVenta);
         $url = config('edatel.serviceurl');
-        $response = Http::withOptions(['verify' => false,])
+        $response = Http::retry(3, 100)->timeout(60)->withOptions(['verify' => false,])
             ->asForm()
             ->post($url, [
                 "ListaVal" => 'r3g1str4v3nt4',
                 "XmlVenta" => $XmlVenta
             ]);
-
-        //dd($response->body());
-        //[103974493/0/0//1]
 
         $result = explode("/",$response->body());
         $solicitud = $result[0];
@@ -297,7 +294,7 @@ class VentaController extends Controller
         $localidad = $request->session()->get('localidad');
 
         $url = config('edatel.serviceurl');
-        $response = Http::withOptions(['verify' => false,])
+        $response = Http::retry(3, 100)->timeout(60)->withOptions(['verify' => false,])
             ->asForm()
             ->post($url, [
                 "inuLocalidad" => $localidad[0],
@@ -330,7 +327,7 @@ class VentaController extends Controller
         }
         $filtro .= " and tipo_cliente = $request->tipo_cliente and prod_voz = '$prod_voz' and prod_int = '$prod_int' and prod_tv = '$prod_tv' and prod_empaquetado = '$prod_empaquetado' and TIPO_PRODUCTO in (1, 24, 8900, 6042)";
         $url = config('edatel.serviceurl');
-        $response = Http::withOptions(['verify' => false,])
+        $response = Http::retry(3, 100)->timeout(60)->withOptions(['verify' => false,])
             ->asForm()
             ->post($url, [
                 "ListaVal" => 'l1574_Pl4nC14l',
@@ -377,7 +374,7 @@ class VentaController extends Controller
         $filtro .= " and tipo_cliente = $request->tipo_cliente and prod_voz = '$prod_voz' and prod_int = '$prod_int' and prod_tv = '$prod_tv' and prod_empaquetado = '$prod_empaquetado' and TIPO_PRODUCTO in ($tipoproducto)";
 
         $url = config('edatel.serviceurl');
-        $response = Http::withOptions(['verify' => false,])
+        $response = Http::retry(3, 100)->timeout(60)->withOptions(['verify' => false,])
             ->asForm()
             ->post($url, [
                 "ListaVal" => 'l1574_Pl4nC14l',
@@ -396,7 +393,7 @@ class VentaController extends Controller
         $filtro .= " and plan_comercial = $request->plancomercial";
 
         $url = config('edatel.serviceurl');
-        $response = Http::withOptions(['verify' => false,])
+        $response = Http::retry(3, 100)->timeout(60)->withOptions(['verify' => false,])
             ->asForm()
             ->post($url, [
                 "ListaVal" => 'l1574_Pl4nV3nt4',
@@ -413,7 +410,7 @@ class VentaController extends Controller
         $filtro .= " and Plan_comercial = $request->plancomercial";
 
         $url = config('edatel.serviceurl');
-        $response = Http::withOptions(['verify' => false,])
+        $response = Http::retry(3, 100)->timeout(60)->withOptions(['verify' => false,])
             ->asForm()
             ->post($url, [
                 "ListaVal" => 'l1574_Cl4s3Svc10',
@@ -426,7 +423,7 @@ class VentaController extends Controller
     public function getVelocidadesCambio(Request $request) {
 
         $url = config('edatel.serviceurl');
-        $response = Http::withOptions(['verify' => false,])
+        $response = Http::retry(3, 100)->timeout(60)->withOptions(['verify' => false,])
             ->asForm()
             ->post($url, [
                 "ListaVal" => 'C0nsu_Cl4s_V3l0',
@@ -446,7 +443,7 @@ class VentaController extends Controller
         $Xmlcambiovel = "<PRODUCTO_CAMVELOCIDAD>$PRODUCTO_CAMVELOCIDAD</PRODUCTO_CAMVELOCIDAD><VELOCIDAD_NUEVA>$VELOCIDAD_NUEVA</VELOCIDAD_NUEVA><VENDEDOR>$vendedor[0]</VENDEDOR>";
 
         $url = config('edatel.serviceurl');
-        $response = Http::withOptions(['verify' => false,])
+        $response = Http::retry(3, 100)->timeout(60)->withOptions(['verify' => false,])
             ->asForm()
             ->post($url, [
                 "ListaVal" => 'R3gC4mb10V3l0c1d4d',
@@ -472,7 +469,7 @@ class VentaController extends Controller
         $PlanCcialTV = $request->PlanCcialTV;
 
         $url = config('edatel.serviceurl');
-        $response = Http::withOptions(['verify' => false,])
+        $response = Http::retry(3, 100)->timeout(60)->withOptions(['verify' => false,])
             ->asForm()
             ->post($url, [
                 "ListaVal" => 'c0nsult4Pl4nC14lP4q',
@@ -507,12 +504,12 @@ class VentaController extends Controller
                         "<VENDEDOR>$vendedor[0]</VENDEDOR>";
 
         $url = config('edatel.serviceurl');
-        $response = Http::withOptions(['verify' => false,])
+        $response = Http::retry(3, 100)->timeout(60)->withOptions(['verify' => false,])
             ->asForm()
             ->post($url, [
                 "ListaVal" => 'R3g3mp4qu4t4m13nt0',
                 "XmlPaquete" => $XmlPaquete
-            ]);
+        ]);
 
         //[103974493/0/0//1]
         $result = explode("/",$response->body());
@@ -523,6 +520,56 @@ class VentaController extends Controller
 
         return ['solicitud' => $solicitud, 'cun' => $cun, 'codigo' => $codigo, 'mensaje' => $mensaje];
     }
+
+    public function solicitudes(Request $request)
+    {
+        $vendedor = $request->session()->get('Vendedor');
+        $localidad = $request->session()->get('localidad');
+
+        return Inertia::render('Ventas/Solicitudes', [
+            'Vendedor' => $vendedor[0],
+            'localidad' => $localidad[0],
+        ]);
+    }
+
+    public function getsolicitudes(Request $request) {
+        $vendedor = $request->session()->get('Vendedor');
+        $url = config('edatel.serviceurl');
+        $response = Http::retry(3, 100)->timeout(60)->withOptions(['verify' => false,])
+            ->asForm()
+            ->post($url, [
+                "ListaVal" => 'c0nsult4vt4',
+                "Filtro" => $vendedor[0],
+                "Filtro2" => (new Carbon($request->fechainicio))->format('Y-m-d'),
+                "Filtro3" => (new Carbon($request->fechafin))->format('Y-m-d')
+            ]);
+
+        $resultado = $response->collect()->groupBy('ESTADO')->map(function ($row) {
+            return $row->count();
+        });
+
+//        dd($resultado);
+
+        return ['solicitudes' => $resultado, 'status' => $response->status()];
+    }
+
+    public function getDetallesolicitudes(Request $request) {
+        $vendedor = $request->session()->get('Vendedor');
+        $url = config('edatel.serviceurl');
+        $filtro = $vendedor[0]. " and ESTADO = '$request->nombre'";
+
+        $response = Http::retry(3, 100)->timeout(60)->withOptions(['verify' => false,])
+            ->asForm()
+            ->post($url, [
+                "ListaVal" => 'c0nsult4vt4',
+                "Filtro" => $filtro,
+                "Filtro2" => (new Carbon($request->fechainicio))->format('Y-m-d'),
+                "Filtro3" => (new Carbon($request->fechafin))->format('Y-m-d')
+            ]);
+
+        return ['solicitudes' => $response->json(), 'status' => $response->status()];
+    }
+
 
 
 }

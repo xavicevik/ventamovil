@@ -36,7 +36,7 @@ class ClienteController extends Controller
     public function getCliente(Request $request)
     {
         $url = config('edatel.serviceurl');
-        $response = Http::withOptions(['verify' => false,])
+        $response = Http::retry(3, 100)->timeout(60)->withOptions(['verify' => false,])
             ->asForm()
             ->post($url, [
                 "ListaVal" => 'c0nsult4Ct3',
@@ -51,12 +51,11 @@ class ClienteController extends Controller
             $segmento = Segmentos::where('CODIGO', $response->json([0])['SEGMENTO'])->first();
             $tipocliente = TiposCliente::where('CODIGO', $request->tipocliente)->first();
         }
-
         return [
             'data' => $response->json(),
             'status' => $response->status(),
-            'segmento' => valTrue($segmento)?$segmento->DESCRIPCION:'',
-            'tipocliente' => valTrue($tipocliente)?$tipocliente->DESCRIPCION:''
+            'segmento' => $segmento?$segmento->DESCRIPCION:'',
+            'tipocliente' => $tipocliente?$tipocliente->DESCRIPCION:''
             ];
     }
     /**
@@ -90,7 +89,7 @@ class ClienteController extends Controller
         $Xmlcliente .= '<MEDIO_RECEPCION>15</MEDIO_RECEPCION>';
 
         $url = config('edatel.serviceurl');
-        $response = Http::withOptions(['verify' => false,])
+        $response = Http::retry(3, 100)->timeout(60)->withOptions(['verify' => false,])
             ->asForm()
             ->post($url, [
                 "ListaVal" => 'cr34cl13nt3',
@@ -109,7 +108,7 @@ class ClienteController extends Controller
     public function getContrato(Request $request)
     {
         $url = config('edatel.serviceurl');
-        $response = Http::withOptions(['verify' => false,])
+        $response = Http::retry(3, 100)->timeout(60)->withOptions(['verify' => false,])
             ->asForm()
             ->post($url, [
                 "ListaVal" => 'l1574_C0nt4V3l',
@@ -126,7 +125,7 @@ class ClienteController extends Controller
     public function getContratoProd(Request $request)
     {
         $url = config('edatel.serviceurl');
-        $response = Http::withOptions(['verify' => false,])
+        $response = Http::retry(3, 100)->timeout(60)->withOptions(['verify' => false,])
             ->asForm()
             ->post($url, [
                 "ListaVal" => 'c0nsult4Pr0d',
@@ -138,7 +137,7 @@ class ClienteController extends Controller
         $int = $response->collect()->where('TIPO_PRODUCTO', '=',24)->first();
         $tv = $response->collect()->whereIn('TIPO_PRODUCTO', [8900, 6042])->first();
 
-        $response2 = Http::withOptions(['verify' => false,])
+        $response2 = Http::retry(3, 100)->timeout(60)->withOptions(['verify' => false,])
             ->asForm()
             ->post($url, [
                 "ListaVal" => 'c0nsult4M0t1v0S0l',

@@ -4,20 +4,22 @@
 
         </template>
 
-        <!-- Mobile sub header -->
-        <div
-            class="flex items-center justify-between p-2 bg-white rounded-md text-sm shadow-lg top-16 left-5 right-5"
-        >
-            <!-- Seetings button -->
-            <a href="#facturacion">
-                <button
-                    class="p-2 text-white bg-red-600 rounded-lg shadow-md hover:text-white hover:bg-blue-700 focus:outline-none focus:ring focus:ring-white focus:ring-offset-gray-100 focus:ring-offset-4"
-                    :class="{'text-white bg-blue-700': navState == 'facturacion'}"
-                >
-                    <span class="">Cambio de velocidad</span>
+        <div class="w-full px-0 rounded-lg sm:px-4">
+            <!-- Mobile sub header -->
+            <div
+                class="flex items-center justify-between p-2 bg-white rounded-md text-sm shadow-lg top-16 left-5 right-5"
+            >
+                <!-- Seetings button -->
+                <a href="#facturacion">
+                    <button
+                        class="p-2 text-white bg-red-600 rounded-lg shadow-md hover:text-white hover:bg-blue-700 focus:outline-none focus:ring focus:ring-white focus:ring-offset-gray-100 focus:ring-offset-4"
+                        :class="{'text-white bg-blue-700': navState == 'facturacion'}"
+                    >
+                        <span class="">Cambio de velocidad</span>
 
-                </button>
-            </a>
+                    </button>
+                </a>
+            </div>
         </div>
         <section>
             <div @click="cleanMessage()" mx-auto class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md my-3" role="alert" v-show="errorcreacion">
@@ -246,12 +248,19 @@ export default {
             this.form.PLAN_CCIAL_INT = 0,
             this.form.VELOCIDAD_NEW = 0;
             this.form.PLANFACT = 0;
-            this.errors = [];
+
+            this.errors.SUBSCRIPTIONID = '';
+            this.errors.NOMBRE = '';
+            this.errors.PRODUCTID = '';
+            this.errors.DESCRIPCION = '';
+            this.errors.VELOCIDAD = 0;
+            this.errors.PLAN_CCIAL_INT = 0;
+            this.errors.VELOCIDAD_NEW = 0;
+            this.errors.PLANFACT = 0;
         },
 
 
         save: async function (form) {
-            this.loading = true;
             let statuserror = true;
             this.isValidategeneral = false;
 
@@ -289,7 +298,6 @@ export default {
                     title: 'Ingrese la información solicitada',
                     showConfirmButton: true,
                 })
-                this.loading = false;
                 return false;
             }
             this.$nextTick(() => {
@@ -298,7 +306,7 @@ export default {
             });
 
             console.log('creación de solicitud de cambio de velocidad');
-
+            this.loading = true;
             let res;
             try {
                 res = await axios.get('/velocidad/store', {
@@ -309,6 +317,7 @@ export default {
                 });
             } catch (error) {
                 console.log(error);
+                this.loading = false;
                 return false;
             }
 
@@ -344,6 +353,7 @@ export default {
                     }
                 });
             } catch (error) {
+                this.loading = false;
                 console.log(error);
                 return false;
             }
@@ -364,6 +374,7 @@ export default {
 
         getVelocidadesCambio: async function (planfact) {
             console.log('consultar velocidad cambio');
+            this.loading = true;
             let res;
             try {
                 res = await axios.get('/venta/getVelocidadesCambio', {
@@ -372,10 +383,12 @@ export default {
                     }
                 });
             } catch (error) {
+                this.loading = false;
                 console.log(error);
                 return false;
             }
             console.log(res.data);
+            this.loading = false;
             this.arrayVelocidadesInt = res.data.velocidades;
         },
 

@@ -37,12 +37,16 @@ class LoginController extends Controller
     {
         $token = csrf_token();
         $arrayDepartamentos = Departamento::all();
+        $mac = exec('getmac');
+
+        $macAddr = substr($mac,0,17);
 
         return Inertia::render('Auth/Login', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
             '_token' => $token,
-            'arrayDepartamentos' => $arrayDepartamentos
+            'arrayDepartamentos' => $arrayDepartamentos,
+            'macAddr' => $macAddr
         ]);
     }
 
@@ -51,9 +55,11 @@ class LoginController extends Controller
     {
         $token = csrf_token();
 
-        //$macAddr = exec('getmac');
-        //dd(substr($macAddr,0,17));
-        $IMEI = '1234567890';
+        $mac = exec('getmac');
+        $macAddr = substr($mac,0,17);
+
+        $IMEI = $macAddr;
+        //$IMEI = '1234567890';
 
         $url = config('edatel.serviceurl');
         $response = Http::withOptions(['verify' => false,])
@@ -73,7 +79,6 @@ class LoginController extends Controller
 
         }
         $user = User::where('id', 1)->first();
-        Auth::login($user);
         Auth::login($user, true);
 
         $localidad = Localidad::where('CODIGO', $request->localidad)->first();

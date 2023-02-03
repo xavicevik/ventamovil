@@ -505,108 +505,9 @@ export default {
         }
     },
     methods: {
-        cambiarPass: function(){
-            this.isOpencambiopass = true;
-        } ,
-        updatePass: function(data) {
-            this.$inertia.post('/changepasssu', data, {
-                onSuccess: (page) => {
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'Se ha cambiado la contraseña',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                    this.formpasswd.id = 0;
-                    this.formpasswd.password = '';
-                    this.formpasswd.password_confirmation = '';
-                    this.isOpencambiopass = false;
-                    this.getUsers('','nombre');
-                    this.editMode = false;
-                    this.closeModal();
-                },
-            });
-        },
+
         openModal: function (accion, data = []) {
             switch (accion) {
-                case 'registrar':
-                {
-                    this.reset();
-                    this.tituloModal = 'Crear nuevo Usuario';
-                    this.form.idpais = 0;
-                    this.form.iddepartamento = 0;
-                    this.form.idciudad = 0;
-                    this.form.idtipos_documento = 0;
-                    this.form.idrol = 0;
-                    this.form.idempresa = 0;
-                    this.getRoles();
-                    this.getPaises();
-                    this.getCiudades();
-                    this.getDepartamentos();
-                    this.getTiposdocumento();
-                    this.newMode = true;
-                    this.verMode = false;
-                    this.editMode = false;
-                    break;
-                }
-                case 'ver': {
-                    this.tituloModal = 'Ver Usuario ' + data['username'];
-                    this.form.idpais = data['idpais'];
-                    this.form.iddepartamento = data['iddepartamento'];
-                    this.form.idciudad = data['idciudad'];
-                    this.form.idtipos_documento = data['idtipos_documento'];
-                    this.form.idrol = data['idrol'];
-                    this.form.idempresa = data['idempresa'];
-                    this.form.nombre = data['nombre'];
-                    this.form.apellido = data['apellido'];
-                    this.form.correo = data['correo'];
-                    this.form.movil = data['movil'];
-                    this.form.documento = data['documento'];
-                    this.form.username = data['username'];
-                    this.form.direccion = data['direccion'];
-                    this.form.telefono = data['telefono'];
-                    this.getRoles();
-                    this.getPaises();
-                    this.getCiudades();
-                    this.getDepartamentos();
-                    this.getTiposdocumento();
-                    this.getEmpresas();
-                    this.newMode = false;
-                    this.verMode = true;
-                    this.editMode = false;
-                    break;
-                    break;
-                }
-                case 'actualizar': {
-                    this.form.id = data['id'];
-                    this.tituloModal = 'Actualizar Usuario ' + data['username'];
-                    this.form.idpais = data['idpais'];
-                    this.form.iddepartamento = data['iddepartamento'];
-                    this.form.idciudad = data['idciudad'];
-                    this.form.idtipos_documento = data['idtipos_documento'];
-                    this.form.idrol = data['idrol'];
-                    this.form.idempresa = data['idempresa'];
-                    this.form.nombre = data['nombre'];
-                    this.form.apellido = data['apellido'];
-                    this.form.correo = data['correo'];
-                    this.form.movil = data['movil'];
-                    this.form.documento = data['documento'];
-                    this.form.username = data['username'];
-                    this.form.direccion = data['direccion'];
-                    this.form.telefono = data['telefono'];
-                    this.getRoles();
-                    this.getPaises();
-                    this.getCiudades();
-                    this.getDepartamentos();
-                    this.getTiposdocumento();
-                    this.getEmpresas();
-                    this.newMode = false;
-                    this.verMode = false;
-                    this.editMode = true;
-                    break;
-                    break;
-                }
                 case 'dirinsta':
                     this.isOpenModalDirInsta = true;
                     break;
@@ -953,9 +854,13 @@ export default {
                 this.getComercialPlan('paquete');
                 switch (this.step) {
                     case 2:
-                        if (this.form.INC_INT || this.form.INC_SOLINT) {
-                            this.activeTab = 'internet';
-                        } else if (this.form.INC_TV || this.form.INC_SOLTV) {
+                        if (this.form.INC_VOZ || this.form.INC_SOLVOZ) {
+                            if (this.form.INC_INT || this.form.INC_SOLINT) {
+                                this.activeTab = 'internet';
+                            } else if (this.form.INC_TV || this.form.INC_SOLTV) {
+                                this.activeTab = 'tv';
+                            }
+                        } else  {
                             this.activeTab = 'tv';
                         }
                         break;

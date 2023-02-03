@@ -4,43 +4,45 @@
 
         </template>
 
-        <!-- Mobile sub header -->
-        <div
-            class="flex items-center justify-between p-2 bg-white rounded-md text-sm shadow-lg top-16 left-5 right-5"
-        >
-            <!-- Seetings button -->
-            <button
-                @click="prev('referencias')"
-                class="p-2 text-white bg-red-600 rounded-lg shadow-md hover:text-white hover:bg-blue-700 focus:outline-none focus:ring focus:ring-white focus:ring-offset-gray-100 focus:ring-offset-4"
-                :class="{'text-white bg-blue-700': navState == 'general'}"
+        <div class="w-full px-0 rounded-lg sm:px-4">
+            <!-- Mobile sub header -->
+            <div
+                class="flex items-center justify-between p-2 bg-white rounded-md text-sm shadow-lg top-16 left-5 right-5"
             >
-                <span class="">General</span>
+                <!-- Seetings button -->
+                <button
+                    @click="prev('referencias')"
+                    class="p-2 text-white bg-red-600 rounded-lg shadow-md hover:text-white hover:bg-blue-700 focus:outline-none focus:ring focus:ring-white focus:ring-offset-gray-100 focus:ring-offset-4"
+                    :class="{'text-white bg-blue-700': navState == 'general'}"
+                >
+                    <span class="">General</span>
 
-            </button>
-            <!-- Messages button -->
-            <button
-                @click="next('general')"
-                class="p-2 text-white bg-red-600 rounded-lg shadow-md hover:text-white hover:bg-blue-700 focus:outline-none focus:ring focus:ring-white focus:ring-offset-gray-100 focus:ring-offset-4"
-                :class="{'text-white bg-blue-700': navState == 'referencias'}"
-            >
-                <span class="">Referencias</span>
-            </button>
-            <!-- Notifications button -->
-            <button
-                @click="isValidategeneral?next('referencias'):next('general')"
-                class="p-2 text-white bg-red-600 rounded-lg shadow-md hover:text-white hover:bg-blue-700 focus:outline-none focus:ring focus:ring-white focus:ring-offset-gray-100 focus:ring-offset-4"
-                :class="{'text-white bg-blue-700': navState == 'empresa'}"
-            >
-                <span class="">Empresa</span>
-            </button>
-            <!-- Github link -->
-            <a
-                @click="isValidategeneral?next('empresa'):next('general')"
-                class="p-2 text-white bg-red-600 rounded-lg shadow-md hover:text-white hover:bg-blue-700 focus:outline-none focus:ring focus:ring-white focus:ring-offset-gray-100 focus:ring-offset-4"
-                :class="{'text-white bg-blue-700': navState == 'autorizacion'}"
-            >
-                <span class="">Autorización</span>
-            </a>
+                </button>
+                <!-- Messages button -->
+                <button
+                    @click="next('general')"
+                    class="p-2 text-white bg-red-600 rounded-lg shadow-md hover:text-white hover:bg-blue-700 focus:outline-none focus:ring focus:ring-white focus:ring-offset-gray-100 focus:ring-offset-4"
+                    :class="{'text-white bg-blue-700': navState == 'referencias'}"
+                >
+                    <span class="">Referencias</span>
+                </button>
+                <!-- Notifications button -->
+                <button
+                    @click="isValidategeneral?next('referencias'):next('general')"
+                    class="p-2 text-white bg-red-600 rounded-lg shadow-md hover:text-white hover:bg-blue-700 focus:outline-none focus:ring focus:ring-white focus:ring-offset-gray-100 focus:ring-offset-4"
+                    :class="{'text-white bg-blue-700': navState == 'empresa'}"
+                >
+                    <span class="">Empresa</span>
+                </button>
+                <!-- Github link -->
+                <a
+                    @click="isValidategeneral?next('empresa'):next('general')"
+                    class="p-2 text-white bg-red-600 rounded-lg shadow-md hover:text-white hover:bg-blue-700 focus:outline-none focus:ring focus:ring-white focus:ring-offset-gray-100 focus:ring-offset-4"
+                    :class="{'text-white bg-blue-700': navState == 'autorizacion'}"
+                >
+                    <span class="">Autorización</span>
+                </a>
+            </div>
         </div>
         <section>
             <div @click="cleanMessage()" mx-auto class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md my-3" role="alert" v-show="errorcreacion">
@@ -590,112 +592,8 @@ export default {
         }
     },
     methods: {
-        cambiarPass: function(){
-            this.isOpencambiopass = true;
-        } ,
-        updatePass: function(data) {
-            this.$inertia.post('/changepasssu', data, {
-                onSuccess: (page) => {
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'Se ha cambiado la contraseña',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                    this.formpasswd.id = 0;
-                    this.formpasswd.password = '';
-                    this.formpasswd.password_confirmation = '';
-                    this.isOpencambiopass = false;
-                    this.getUsers('','nombre');
-                    this.editMode = false;
-                    this.closeModal();
-                },
-            });
-        },
         openModal: function (accion, data = []) {
             this.isOpen = true;
-
-            switch (accion) {
-                case 'registrar':
-                {
-                    this.reset();
-                    this.tituloModal = 'Crear nuevo Usuario';
-                    this.form.idpais = 0;
-                    this.form.iddepartamento = 0;
-                    this.form.idciudad = 0;
-                    this.form.idtipos_documento = 0;
-                    this.form.idrol = 0;
-                    this.form.idempresa = 0;
-                    this.getRoles();
-                    this.getPaises();
-                    this.getCiudades();
-                    this.getDepartamentos();
-                    this.getTiposdocumento();
-                    this.newMode = true;
-                    this.verMode = false;
-                    this.editMode = false;
-                    break;
-                }
-                case 'ver': {
-                    this.tituloModal = 'Ver Usuario ' + data['username'];
-                    this.form.idpais = data['idpais'];
-                    this.form.iddepartamento = data['iddepartamento'];
-                    this.form.idciudad = data['idciudad'];
-                    this.form.idtipos_documento = data['idtipos_documento'];
-                    this.form.idrol = data['idrol'];
-                    this.form.idempresa = data['idempresa'];
-                    this.form.nombre = data['nombre'];
-                    this.form.apellido = data['apellido'];
-                    this.form.correo = data['correo'];
-                    this.form.movil = data['movil'];
-                    this.form.documento = data['documento'];
-                    this.form.username = data['username'];
-                    this.form.direccion = data['direccion'];
-                    this.form.telefono = data['telefono'];
-                    this.getRoles();
-                    this.getPaises();
-                    this.getCiudades();
-                    this.getDepartamentos();
-                    this.getTiposdocumento();
-                    this.getEmpresas();
-                    this.newMode = false;
-                    this.verMode = true;
-                    this.editMode = false;
-                    break;
-                    break;
-                }
-                case 'actualizar': {
-                    this.form.id = data['id'];
-                    this.tituloModal = 'Actualizar Usuario ' + data['username'];
-                    this.form.idpais = data['idpais'];
-                    this.form.iddepartamento = data['iddepartamento'];
-                    this.form.idciudad = data['idciudad'];
-                    this.form.idtipos_documento = data['idtipos_documento'];
-                    this.form.idrol = data['idrol'];
-                    this.form.idempresa = data['idempresa'];
-                    this.form.nombre = data['nombre'];
-                    this.form.apellido = data['apellido'];
-                    this.form.correo = data['correo'];
-                    this.form.movil = data['movil'];
-                    this.form.documento = data['documento'];
-                    this.form.username = data['username'];
-                    this.form.direccion = data['direccion'];
-                    this.form.telefono = data['telefono'];
-                    this.getRoles();
-                    this.getPaises();
-                    this.getCiudades();
-                    this.getDepartamentos();
-                    this.getTiposdocumento();
-                    this.getEmpresas();
-                    this.newMode = false;
-                    this.verMode = false;
-                    this.editMode = true;
-                    break;
-                    break;
-                }
-
-            }
         },
         closeModal: function () {
             this.isOpen = false;
@@ -703,10 +601,6 @@ export default {
             this.editMode = false;
             this.verMode  = false;
             this.$page.props.errors = [];
-        },
-        closeModalPass: function () {
-            this.isOpencambiopass = false
-            this.$page.props.errors.updatePassword = null;
         },
         reset: function () {
             this.tituloModal = '';
@@ -741,25 +635,6 @@ export default {
             this.isValidategeneral = false;
             this.errors = [];
         },
-        savex: function (data) {
-            this.$inertia.post('/users', data, {
-                onSuccess: (page) => {
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'El usuario se ha creado',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                    this.reset();
-                    this.closeModal();
-                    this.getUsers('','nombre');
-                    this.editMode = false;
-                },
-            });
-
-        },
-
 
         save: async function (Xmlcliente) {
             if (this.form.AUTORIZA== null ||this.form.AUTORIZA == '') {
@@ -814,6 +689,7 @@ export default {
             }
 
             console.log('creación de cliente');
+            this.loading = true;
             let res;
             try {
                 res = await axios.get('/cliente/store', {
@@ -823,6 +699,7 @@ export default {
                 });
             } catch (error) {
                 console.log(error);
+                this.loading = false;
                 return false;
             }
 
@@ -846,9 +723,11 @@ export default {
                 this.errorcreacion = resultado.mensaje;
                 console.log(res.data);
             }
+            this.loading = false;
         },
         getCliente: async function (tipocliente, tipoident, identificacion) {
             console.log('consultar cliente');
+            this.loading = true;
             let res;
             try {
                 res = await axios.get('/cliente/getCliente', {
@@ -860,6 +739,7 @@ export default {
                 });
             } catch (error) {
                 console.log(error);
+                this.loading = false;
                 return false;
             }
             console.log(res.data.data[0]);
@@ -874,6 +754,7 @@ export default {
                     })
                 }
             }
+            this.loading = false;
         },
         next: function (option) {
             switch (option) {

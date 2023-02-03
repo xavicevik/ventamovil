@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'ShoppingRed'),
+    'name' => env('APP_NAME', 'VentaMovil'),
 
     'regxpage' => env('MAX_CANT_REG_PAGE', 3),
 
@@ -167,7 +167,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
 
         //Darryldecode\Cart\CartServiceProvider::class,
-        Spatie\Permission\PermissionServiceProvider::class,
+        //Spatie\Permission\PermissionServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -180,7 +180,7 @@ return [
         App\Providers\AuthServiceProvider::class,
         //App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
-        App\Providers\BiServiceProvider::class,
+        //App\Providers\BiServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\FortifyServiceProvider::class,
         App\Providers\JetstreamServiceProvider::class,

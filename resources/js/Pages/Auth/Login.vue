@@ -22,6 +22,7 @@ defineProps({
     status: String,
     arrayDepartamentos: [],
     _token: String,
+    macAddr: ''
 });
 
 const form = useForm({
@@ -113,7 +114,7 @@ export default {
             <div class="mt-4">
                 <JetLabel for="departamento" value="Departamento" />
 
-                <select @click="getLocalidadDepartamento(form.departamento)" class="block w-full rounded-lg text-gray-700 text-sm" required v-model="form.departamento">
+                <select @click="getLocalidadDepartamento(form.departamento)" @change="getLocalidadDepartamento(form.departamento)" class="block w-full rounded-lg text-gray-700 text-sm" required v-model="form.departamento">
                     <option value="0" >Seleccione el departamento</option>
                     <option v-for="opcion in arrayDepartamentos" :key="opcion.CODIGO" :value="opcion.CODIGO" v-text="opcion.DESCRIPCION"></option>
                 </select>
@@ -126,6 +127,10 @@ export default {
                     <option value="0" >Seleccione una localidad</option>
                     <option v-for="opcion in arrayLocalidades" :key="opcion.CODIGO" :value="opcion.CODIGO" v-text="opcion.DESCRIPCION"></option>
                 </select>
+            </div>
+
+            <div class="mt-4">
+                <JetLabel for="macAddr" value="MAC Dispositivo " /> {{ macAddr }}
             </div>
 
             <div class="flex items-center justify-end mt-4">
