@@ -30,6 +30,7 @@ const form = useForm({
     Identificacion: '',
     departamento: 0,
     localidad: 0,
+    telefono: '',
     _token: usePage().props.value._token,
 });
 
@@ -129,8 +130,16 @@ export default {
                 </select>
             </div>
 
-            <div class="mt-4">
-                <JetLabel for="macAddr" value="MAC Dispositivo " /> {{ macAddr }}
+            <div>
+                <JetLabel for="telefono" value="Teléfono" />
+                <JetInput
+                    id="telefono"
+                    v-model="form.telefono"
+                    type="number"
+                    class="mt-1 block w-full"
+                    required
+                    autofocus
+                />
             </div>
 
             <div class="flex items-center justify-end mt-4">

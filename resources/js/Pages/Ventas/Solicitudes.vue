@@ -127,13 +127,10 @@
                                     <thead>
                                     <tr class="bg-gray-100">
                                         <th class="px-4 py-2 w-1/2 text-sm font-bold hover:bg-blue-500 hover:text-gray-50 rounded-b">
-                                            Sol
+                                            Solicitud
                                         </th>
                                         <th class="px-4 py-2 w-1/2 text-sm font-bold hover:bg-blue-500 hover:text-gray-50 rounded-b">
                                             Trámite
-                                        </th>
-                                        <th class="px-4 py-2 w-1/2 text-sm font-bold hover:bg-blue-500 hover:text-gray-50 rounded-b">
-                                            Prod
                                         </th>
                                         <th class="px-4 py-2 w-1/2 text-sm font-bold hover:bg-blue-500 hover:text-gray-50 rounded-b">
                                             Fecha
@@ -144,7 +141,6 @@
                                     <tr class="text-center hover:bg-blue-400 text-sm" v-if="arrayDetalleSolicitudes" v-for="(dato) in arrayDetalleSolicitudes">
                                         <td class="border px-1 py-2 text-sm truncate" v-text="dato.SOLICITUD"></td>
                                         <td class="border px-1 py-2 text-sm truncate" v-text="dato.TRAMITE"></td>
-                                        <td class="border px-1 py-2 text-sm truncate" v-text="dato.PDTOINSTALAR"></td>
                                         <td class="border px-1 py-2 text-sm truncate" v-text="dato.REQUEST_DATE"></td>
                                     </tr>
                                     </tbody>

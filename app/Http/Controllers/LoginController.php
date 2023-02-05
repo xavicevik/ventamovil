@@ -37,16 +37,12 @@ class LoginController extends Controller
     {
         $token = csrf_token();
         $arrayDepartamentos = Departamento::all();
-        $mac = exec('getmac');
-
-        $macAddr = substr($mac,0,17);
 
         return Inertia::render('Auth/Login', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
             '_token' => $token,
             'arrayDepartamentos' => $arrayDepartamentos,
-            'macAddr' => $macAddr
         ]);
     }
 
@@ -55,12 +51,6 @@ class LoginController extends Controller
     {
         $token = csrf_token();
 
-        $mac = exec('getmac');
-        $macAddr = substr($mac,0,17);
-
-        $IMEI = $macAddr;
-        //$IMEI = '1234567890';
-
         $url = config('edatel.serviceurl');
         $response = Http::withOptions(['verify' => false,])
             ->asForm()
@@ -68,7 +58,7 @@ class LoginController extends Controller
                 "ListaVal" => 'v4l1d4Usu4r10',
                 "Vendedor" => $request->Vendedor,
                 "Identificacion" => $request->Identificacion,
-                "IMEI" => $IMEI
+                "IMEI" => $request->telefono
             ]);
 
         if ($response->body() != '0/') {
