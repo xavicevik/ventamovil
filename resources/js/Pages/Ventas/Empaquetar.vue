@@ -1,5 +1,5 @@
 <template>
-    <AppLayout title="Clientes" :Vendedor="Vendedor" :localidad="localidad" :localidaddesc="localidaddesc">
+    <AppLayout title="Ventas" :Vendedor="Vendedor" :localidad="localidad" :localidaddesc="localidaddesc">
         <template #header>
 
         </template>
@@ -285,8 +285,6 @@
                                     <semipolar-spinner class="mt-10 mx-auto" :animation-duration="2000" :size="85" color="#ff1d5e" />
                                 </div>
                             </section>
-
-
                     </div>
                 </div>
             </section>
@@ -300,21 +298,9 @@
 <script>
 import AppLayout from '@/Layouts/AppLayoutapp2.vue';
 import Swal from "sweetalert2";
-import { Icon } from '@iconify/vue';
-import Toggle from '@vueform/toggle';
-import '@vueform/toggle/themes/default.css';
 import Button from "../../Jetstream/Button";
-import moment from 'moment'
-import { QuillEditor } from '@vueup/vue-quill';
-import '@vueup/vue-quill/dist/vue-quill.snow.css';
-import { ref, onMounted } from 'vue';
 import { Money3Component } from 'v-money3'
-import {Head, Link, usePage} from '@inertiajs/inertia-vue3';
-import JetNavLink from '@/Jetstream/NavLink.vue';
-import NavLink from "../../Jetstream/NavLink";
 import Input from "../../Jetstream/Input";
-
-import Multiselect from '@vueform/multiselect'
 
 import { SemipolarSpinner } from 'epic-spinners'
 
@@ -322,20 +308,12 @@ export default {
 
     components: {
         Input,
-        NavLink,
         Button,
         AppLayout,
-        Icon,
-        Toggle,
-        QuillEditor,
-        JetNavLink,
-        Link,
         money3: Money3Component,
-        Multiselect,
         SemipolarSpinner
     },
     props:{
-        users : [],
         errors: Object,
         Vendedor: 0,
         localidad: 0,
@@ -378,8 +356,6 @@ export default {
             step: 1,
             pqvoz: [],
             pqtv: [],
-            //segmento: '',
-            //tipocliente: '',
             activeTab: '',
             navState: 'facturacion',
             isOpenModalDirInsta: false,
@@ -505,35 +481,6 @@ export default {
         }
     },
     methods: {
-
-        openModal: function (accion, data = []) {
-            switch (accion) {
-                case 'dirinsta':
-                    this.isOpenModalDirInsta = true;
-                    break;
-                case 'dircobro':
-                    this.isOpenModalDirfact = true;
-                    break;
-            }
-        },
-        closeModal: function (accion) {
-            switch (accion) {
-                case 'dirinsta':
-                    this.isOpenModalDirInsta = false;
-                    break;
-                case 'dircobro':
-                    this.isOpenModalDirfact = false;
-                    break;
-                //this.reset();
-                //this.editMode = false;
-                //this.verMode  = false;
-                //this.$page.props.errors = [];
-            }
-        },
-        closeModalPass: function () {
-            this.isOpencambiopass = false
-            this.$page.props.errors.updatePassword = null;
-        },
         reset: function () {
             this.form.NOMBRE = '';
             this.form.IDENTIFICACION = '';
@@ -582,94 +529,110 @@ export default {
             this.tv.EMPAQUETADO = 'N';
             this.tv.COMERCIAL_PLAN = 0;
 
-
-            this.solvoz.PACKAGE_ID = 0;
-            this.solvoz.MOTIVE_ID = 0;
-            this.solvoz.PRODUCT_TYPE_ID = 0;
-            this.solvoz.COMMERCIAL_PLAN_ID = 0;
-            this.solvoz.PLANFACT = 0;
-            this.solvoz.REQUEST_DATE = '';
-
-            this.solint.PACKAGE_ID = 0;
-            this.solint.MOTIVE_ID = 0;
-            this.solint.PRODUCT_TYPE_ID = 0;
-            this.solint.COMMERCIAL_PLAN_ID = 0;
-            this.solint.PLANFACT = 0;
-            this.solint.REQUEST_DATE = '';
-
-            this.soltv.PACKAGE_ID = 0;
-            this.soltv.MOTIVE_ID = 0;
-            this.soltv.PRODUCT_TYPE_ID = 0;
-            this.soltv.COMMERCIAL_PLAN_ID = 0;
-            this.soltv.PLANFACT = 0;
-            this.soltv.REQUEST_DATE = '';
+            if(this.solvoz) {
+                this.solvoz.PACKAGE_ID = 0;
+                this.solvoz.MOTIVE_ID = 0;
+                this.solvoz.PRODUCT_TYPE_ID = 0;
+                this.solvoz.COMMERCIAL_PLAN_ID = 0;
+                this.solvoz.PLANFACT = 0;
+                this.solvoz.REQUEST_DATE = '';
+            }
+            if (this.solint) {
+                this.solint.PACKAGE_ID = 0;
+                this.solint.MOTIVE_ID = 0;
+                this.solint.PRODUCT_TYPE_ID = 0;
+                this.solint.COMMERCIAL_PLAN_ID = 0;
+                this.solint.PLANFACT = 0;
+                this.solint.REQUEST_DATE = '';
+            }
+            if (this.soltv) {
+                this.soltv.PACKAGE_ID = 0;
+                this.soltv.MOTIVE_ID = 0;
+                this.soltv.PRODUCT_TYPE_ID = 0;
+                this.soltv.COMMERCIAL_PLAN_ID = 0;
+                this.soltv.PLANFACT = 0;
+                this.soltv.REQUEST_DATE = '';
+            }
 
             this.errorcreacion = false;
             this.step = 1;
             this.isValidategeneral = false;
             this.errors = [];
         },
+        reset2: function () {
+            this.form.NOMBRE = '';
+            this.form.IDENTIFICACION = '';
+            this.form.INC_VOZ = 0;
+            this.form.INC_INT = 0;
+            this.form.INC_TV = 0;
+            this.form.INC_SOLVOZ = 0;
+            this.form.INC_SOLINT = 0;
+            this.form.INC_SOLTV = 0;
+            this.form.EMPAQUETADO = 'N';
+            this.form.INC_VOZ_ACT = 0;
+            this.form.INC_INT_ACT = 0;
+            this.form.INC_TV_ACT = 0;
+            this.form.PLAN_CCIAL_LB = 0;
+            this.form.PLAN_VTA_LB = 0;
+            this.form.PLAN_CCIAL_INT = 0;
+            this.form.PLAN_VTA_INT = 0;
+            this.form.PLAN_CCIAL_TV = 0;
+            this.form.PLAN_VTA_TV = 0;
 
+            this.voz.NOMBRE = '';
+            this.voz.IDENTIFICACION = '';
+            this.voz.SUBSCRIPTION_ID = '';
+            this.voz.PRODUCTO = 0;
+            this.voz.TIPO_PRODUCTO = 0;
+            this.voz.PLAN_FACTURACION = 0;
+            this.voz.EMPAQUETADO = 'N';
+            this.voz.COMERCIAL_PLAN = 0;
 
-        crearDireccion: async function (opcion, direccion, barrio) {
-            this.loading = true;
-            let statuserror = true;
-            let url = '/direccion/storeDirInsta';
+            this.int.NOMBRE = '';
+            this.int.IDENTIFICACION = '';
+            this.int.SUBSCRIPTION_ID = '';
+            this.int.PRODUCTO = 0;
+            this.int.TIPO_PRODUCTO = 0;
+            this.int.PLAN_FACTURACION = 0;
+            this.int.EMPAQUETADO = 'N';
+            this.int.COMERCIAL_PLAN = 0;
 
-            if (this.form.DIRECCION == null || this.form.DIRECCION == '') {
-                statuserror =  false;
-                this.errors.DIRECCION = 'Ingrese una dirección';
-            } else {
-                this.errors.DIRECCION = null;
+            this.tv.NOMBRE = '';
+            this.tv.IDENTIFICACION = '';
+            this.tv.SUBSCRIPTION_ID = '';
+            this.tv.PRODUCTO = 0;
+            this.tv.TIPO_PRODUCTO = 0;
+            this.tv.PLAN_FACTURACION = 0;
+            this.tv.EMPAQUETADO = 'N';
+            this.tv.COMERCIAL_PLAN = 0;
+
+            if(this.solvoz) {
+                this.solvoz.PACKAGE_ID = 0;
+                this.solvoz.MOTIVE_ID = 0;
+                this.solvoz.PRODUCT_TYPE_ID = 0;
+                this.solvoz.COMMERCIAL_PLAN_ID = 0;
+                this.solvoz.PLANFACT = 0;
+                this.solvoz.REQUEST_DATE = '';
             }
-
-            /*
-            if (this.form.BARRIO == 0) {
-                statuserror =  false;
-                this.errors.BARRIO = 'Seleccione un barrio';
-            } else {
-                this.errors.BARRIO = null;
+            if (this.solint) {
+                this.solint.PACKAGE_ID = 0;
+                this.solint.MOTIVE_ID = 0;
+                this.solint.PRODUCT_TYPE_ID = 0;
+                this.solint.COMMERCIAL_PLAN_ID = 0;
+                this.solint.PLANFACT = 0;
+                this.solint.REQUEST_DATE = '';
             }
-            */
-
-            if (!statuserror) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Digite la información deseada',
-                    showConfirmButton: true,
-                })
-                return false;
+            if (this.soltv) {
+                this.soltv.PACKAGE_ID = 0;
+                this.soltv.MOTIVE_ID = 0;
+                this.soltv.PRODUCT_TYPE_ID = 0;
+                this.soltv.COMMERCIAL_PLAN_ID = 0;
+                this.soltv.PLANFACT = 0;
+                this.soltv.REQUEST_DATE = '';
             }
-
-            console.log('creación de dirección de instalación');
-            let res;
-            try {
-                res = await axios.get(url, {
-                    params: {
-                        isbDireccion: direccion,
-                        inuBarrio: barrio,
-                    }
-                });
-            } catch (error) {
-                console.log(error);
-                return false;
-            }
-
-            let resultado = res.data;
-
-            if (resultado.id != '' && resultado.id != null && resultado.id > 0) {
-                console.log(res.data);
-                this.closeModal('dirinsta');
-                this.closeModal('dircobro');
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'La dirección no puede ser utilizada',
-                    showConfirmButton: true,
-                })
-                console.log(res.data);
-            }
-            this.loading = false;
+            this.errorcreacion = false;
+            this.step = 1;
+            this.isValidategeneral = false;
         },
         save: async function (form) {
             this.loading = true;
@@ -728,18 +691,6 @@ export default {
                 }
             }
 
-            /*
-            let cantProductos = ((this.form.INC_VOZ||this.form.INC_SOLVOZ)?1:0 + (this.form.INC_INT||this.form.INC_SOLINT)?1:0 + (this.form.INC_TV||this.form.INC_SOLTV?1:0));
-            console.log('cantProductos ' + cantProductos);
-            if ( cantProductos < 2) {
-                statuserror =  false;
-                this.errors.INC_VOZ = 'Seleccione por lo menos un duo a empaquetar';
-            } else {
-                this.errors.INC_VOZ = null;
-            }
-
-             */
-
             if (!statuserror) {
                 Swal.fire({
                     icon: 'error',
@@ -754,8 +705,6 @@ export default {
                 document.body.scrollTop = 0;
                 document.documentElement.scrollTop = 0;
             });
-
-            console.log('creación de solicitud de empaquetamiento');
 
             let res;
             try {
@@ -776,7 +725,6 @@ export default {
                     }
                 });
             } catch (error) {
-                console.log(error);
                 return false;
             }
 
@@ -788,7 +736,6 @@ export default {
                     title: 'La solicitud ' + resultado.solicitud + ' ha sido registrada satisfactoriamente',
                     showConfirmButton: true,
                 })
-                console.log(res.data);
                 this.errorcreacion = 'La solicitud ' + resultado.solicitud + ' ha sido registrada satisfactoriamente';
                 this.reset();
             } else {
@@ -798,13 +745,11 @@ export default {
                     showConfirmButton: true,
                 })
                 this.errorcreacion = resultado.mensaje;
-                console.log(res.data);
             }
             this.loading = false;
         },
         getCliente: async function (tipocliente, tipoident, identificacion) {
             this.loading = true;
-            console.log('consultar cliente');
             let res;
             try {
                 res = await axios.get('/cliente/getCliente', {
@@ -815,10 +760,8 @@ export default {
                     }
                 });
             } catch (error) {
-                console.log(error);
                 return false;
             }
-            console.log(res.data.data);
             if (res.data.data != null) {
                 if (res.data.data[0].SUBSCRIBER_ID > 0) {
                     this.cliente = res.data.data[0];
@@ -849,7 +792,6 @@ export default {
             if (this.valFinish == 'Registrar') {
                 this.save(this.form);
             } else {
-                console.log(this.step);
                 this.step += 1;
                 this.getComercialPlan('paquete');
                 switch (this.step) {
@@ -893,11 +835,7 @@ export default {
             let PlanCcialInt = null;
             let PlanCcialTV = null;
             if (this.form.EMPAQUETADO) {
-                console.log('consultar plan comercial Paquete');
                 let res;
-                console.log('INC_VOZ ' + this.form.INC_VOZ);
-                console.log('INC_INT ' + this.form.INC_INT);
-                console.log('INC_TV ' + this.form.INC_TV);
 
                 switch (this.step) {
                     case 1:
@@ -981,19 +919,8 @@ export default {
                         }
                     });
                 } catch (error) {
-                    console.log(error);
                     return false;
                 }
-                console.log(res.data);
-                //this.arrayPlanesComVoz = [];
-                //this.arrayPlanesComTv = [];
-                //this.arrayPlanesComInternet = [];
-
-                console.log('producto ' + Producto);
-                console.log('motivo ' + Motivo);
-                console.log('plan comercial voz ' + PlanCcialVoz);
-                console.log('plan comercial int ' + PlanCcialInt);
-                console.log('plan comercial tv ' + PlanCcialTV);
 
                 switch (this.step) {
                     case 1:
@@ -1019,7 +946,6 @@ export default {
         },
         getComercialPlanInd: async function (producto) {
             this.loading = true;
-            console.log('consultar plan comercial');
             let res;
             try {
                 res = await axios.get('/venta/getComercialPlanInd', {
@@ -1031,10 +957,8 @@ export default {
                     }
                 });
             } catch (error) {
-                console.log(error);
                 return false;
             }
-            console.log(res.data);
             switch (producto) {
                 case 'voz':
                     this.arrayPlanesComVoz = [];
@@ -1059,7 +983,6 @@ export default {
             this.loading = false;
         },
         getSalesPlan: async function (plancomercial, opcion) {
-            console.log('consultar plan venta');
             this.loading = true;
             let res;
             try {
@@ -1069,10 +992,8 @@ export default {
                     }
                 });
             } catch (error) {
-                console.log(error);
                 return false;
             }
-            console.log(res.data);
             switch (opcion) {
                 case 'voz':
                     this.arrayPlanesVentaVoz = res.data.planes;
@@ -1087,9 +1008,7 @@ export default {
             this.loading = false;
 
         },
-
         getVelocidades: async function (plancomercial) {
-            console.log('consultar velocidad');
             let res;
             try {
                 res = await axios.get('/venta/getVelocidades', {
@@ -1098,13 +1017,10 @@ export default {
                     }
                 });
             } catch (error) {
-                console.log(error);
                 return false;
             }
-            console.log(res.data);
             this.arrayVelocidadesInt = res.data.planes;
         },
-
         changeTab: function (option) {
             switch (option) {
                 case 'voz':
@@ -1137,10 +1053,8 @@ export default {
                     break;
             }
         },
-
         getContratoProd: async function (contrato) {
             this.loading = true;
-            console.log('consultar contrato');
             let res;
             try {
                 res = await axios.get('/cliente/getContratoProd', {
@@ -1149,10 +1063,8 @@ export default {
                     }
                 });
             } catch (error) {
-                console.log(error);
                 return false;
             }
-            console.log(res.data.contrato);
             if (res.data.contrato != null) {
                 this.form = res.data.contrato;
                 this.voz = res.data.voz;
@@ -1185,6 +1097,7 @@ export default {
                     title: 'No se encontró información para el contrato',
                     showConfirmButton: true
                 })
+                this.reset2();
             }
             this.loading = false;
         },
@@ -1203,4 +1116,3 @@ export default {
     },
 }
 </script>
-<style src="@vueform/multiselect/themes/default.css"></style>

@@ -2,100 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\RealTimeMessage;
-use App\Events\SaleApp;
-use App\Jobs\SendEmailJob;
-use App\Jobs\SendSMSJob;
-use App\Models\Archivo;
 use App\Models\Barrio;
-use App\Models\Boleta;
-use App\Models\Caja;
-use App\Models\Checkout;
 use App\Models\Ciclo;
-use App\Models\Cliente;
-use App\Models\Comision;
-use App\Models\Confcomision;
-use App\Models\Configuración;
-use App\Models\Detallesesion;
-use App\Models\Detalleventa;
-use App\Models\Estado;
 use App\Models\Estrato;
-use App\Models\Historialcaja;
-use App\Models\Loteria;
-use App\Models\Imagen;
-use App\Models\Militante;
-use App\Models\Pago;
 use App\Models\Paquetetv;
 use App\Models\Paquetevoz;
-use App\Models\Promoboleta;
-use App\Models\Promocional;
-use App\Models\Recibo;
 use App\Models\Restriccion;
-use App\Models\Rifa;
 use App\Models\Segmentos;
-use App\Models\Sesionventa;
 use App\Models\Tecnologia;
 use App\Models\TiposCliente;
 use App\Models\TiposDocumento;
-use App\Models\Transaccion;
-use App\Models\User;
-use App\Models\Vendedor;
 use App\Models\Venta;
-use App\Models\Whmercadopago;
-use App\Notifications\EmailcodeNotification;
-use Darryldecode\Cart\Cart;
-use Illuminate\Http\Response;
-use Illuminate\Notifications\Notification;
-use Illuminate\Routing\Route;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Redirect;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;;
-
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use MercadoPago\Payment;
 use MercadoPago\Preference;
 use MercadoPago\SDK;
-use Spatie\Permission\Models\Permission;
-use function PHPUnit\Framework\isEmpty;
+
 
 
 class VentaController extends Controller
 {
-    function __construct()
-    {
-        /*
-        $this->middleware('permission:ventas-list|ventas-create|ventas-edit|ventas-delete', ['only' => ['index','show']]);
-        $this->middleware('permission:ventas-create', ['only' => ['create','store']]);
-        $this->middleware('permission:ventas-edit', ['only' => ['edit','update']]);
-        $this->middleware('permission:ventas-delete', ['only' => ['destroy']]);
-        */
-        //$this->middleware(['role:Administrador','permission:ventas-list']);
-        //$this->middleware('permission:ventas-list|ventas-create|ventas-edit|ventas-delete', ['only' => ['index','show']]);
-    }
 
-    const canPorPagina = 10;
-    const debito = 'DB';
-    const credito = 'CR';
-    const pago = 'PA';
-    // lista de estados
-    const inactivo = 0;
-    const activo = 1;
-    const reservado = 2;
-    const vendido = 3;
-    const pendiente = 4;
-    const enproceso = 5;
-    const cancelado = 6;
-    const anulado = 9;
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index(Request $request)
     {
         $vendedor = $request->session()->get('Vendedor');
@@ -110,11 +40,6 @@ class VentaController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create(Request $request)
     {
         $vendedor = $request->session()->get('Vendedor');
@@ -220,13 +145,6 @@ class VentaController extends Controller
         ]);
     }
 
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $datos = json_decode($request->XmlVenta);
@@ -263,7 +181,6 @@ class VentaController extends Controller
 
         $XmlVenta = stringtoXML($datos);
 
-        //dd($XmlVenta);
         $url = config('edatel.serviceurl');
         $response = Http::retry(3, 100)->timeout(60)->withOptions(['verify' => false,])
             ->asForm()
@@ -282,13 +199,6 @@ class VentaController extends Controller
         return ['solicitud' => $solicitud, 'cun' => $cun, 'codigo' => $codigo, 'mensaje' => $mensaje, 'codventa' => $codventa];
     }
 
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function storeDirInsta(Request $request)
     {
         $localidad = $request->session()->get('localidad');
@@ -334,7 +244,6 @@ class VentaController extends Controller
                 "Filtro" => json_encode($filtro)
             ]);
 
-        //dd($response->collect()->where('TIPO_PRODUCTO', '=',1));
         $voz = $response->collect()->where('TIPO_PRODUCTO', '=',1);
         $int = $response->collect()->where('TIPO_PRODUCTO', '=',24);
         $tv = $response->collect()->whereIn('TIPO_PRODUCTO', [8900, 6042]);
@@ -450,7 +359,6 @@ class VentaController extends Controller
                 "Xmlcambiovel" => $Xmlcambiovel
             ]);
 
-        //[103974493/0/0//1]
         $result = explode("/",$response->body());
         $solicitud = $result[0];
         $cun = $result[1];
@@ -548,8 +456,6 @@ class VentaController extends Controller
             return $row->count();
         });
 
-//        dd($resultado);
-
         return ['solicitudes' => $resultado, 'status' => $response->status()];
     }
 
@@ -569,7 +475,6 @@ class VentaController extends Controller
 
         return ['solicitudes' => $response->json(), 'status' => $response->status()];
     }
-
 
 
 }

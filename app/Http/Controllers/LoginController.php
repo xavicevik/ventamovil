@@ -10,7 +10,6 @@ use App\Models\User;
 use App\Models\Vendedor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -20,12 +19,6 @@ class LoginController extends Controller
 {
     use PasswordValidationRules;
 
-    /**
-     * Handle an authentication attempt.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $token = csrf_token();
@@ -39,7 +32,6 @@ class LoginController extends Controller
         ]);
     }
 
-
     public function authenticate(Request $request)
     {
         $token = csrf_token();
@@ -47,7 +39,7 @@ class LoginController extends Controller
         $response = Http::withOptions(['verify' => false,])
             ->asForm()
             ->post($url, [
-                "ListaVal" => 'v4l1d4Usu4r10',
+                "ListaVal" => config('edatel.validarusuario'),
                 "Vendedor" => $request->Vendedor,
                 "Identificacion" => $request->Identificacion,
                 "IMEI" => $request->telefono
@@ -74,6 +66,5 @@ class LoginController extends Controller
         $request->session()->push('localidaddesc', $localidad->DESCRIPCION);
         return redirect()->intended('main');
     }
-
 
 }

@@ -1,5 +1,5 @@
 <template>
-    <AppLayout title="Clientes" :Vendedor="Vendedor" :localidad="localidad" :localidaddesc="localidaddesc">
+    <AppLayout title="Venta" :Vendedor="Vendedor" :localidad="localidad" :localidaddesc="localidaddesc">
         <template #header>
 
         </template>
@@ -115,7 +115,7 @@
                                             </button>
                                         </div>
                                         <label class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                            Cliente
+                                            Identificación del Cliente
                                         </label>
                                         <div v-if="errors.IDENTIFICACION" class="text-xs text-red-500">{{ errors.IDENTIFICACION }}</div>
                                     </div>
@@ -379,29 +379,15 @@
                                         </label>
                                         <div v-if="errors.RETRICCION" class="text-xs text-red-500">{{ errors.RETRICCION }}</div>
                                     </div>
-                                    <div class="w-full my-2 group">
-                                        <Multiselect
-                                            v-model="pqvoz"
-                                            mode="tags"
-                                            :close-on-select="true"
-                                            :searchable="true"
-                                            :options="paquetesvoz"
-                                            placeholder="Seleccione los paquetes"
-                                            track-by="DESCRIPCION"
-                                            label="DESCRIPCION"
-                                            hideSelectedTag="true"
-                                            :search="true"
-                                            noResultsText="No se encontró resultado"
-
-                                            :clear-on-select="false"
-                                            :preserve-search="true"
-                                            :preselect-first="true"
-
-                                            :classes="{
-                                              tag: 'bg-blue-500 text-white text-sm font-semibold py-0.5 pl-2 rounded mr-1 mb-1 flex items-center rtl:pl-0 rtl:pr-2 rtl:mr-0 rtl:ml-1',
-                                            }"
-
-                                        />
+                                    <div class="relative z-0 w-full my-2 group">
+                                        <select v-model="form.PAQUETE_SS" class="block py-4 px-0 w-full text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                                            <option value="" >Seleccione</option>
+                                            <option v-for="opcion in paquetesvoz" :key="opcion.CODIGO" :value="opcion.CODIGO" v-text="opcion.DESCRIPCION"></option>
+                                        </select>
+                                        <label class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                            Paquete de voz
+                                        </label>
+                                        <div v-if="errors.PAQUETE_SS" class="text-xs text-red-500">{{ errors.RETRICCION }}</div>
                                     </div>
                                     <div class="relative z-0 w-full my-2 group">
                                         <input type="checkbox" v-model="form.NUMERO_PRIVADO" value="1" class="px-2 w-6 h-6 text-red-600 rounded border-red-600 focus:ring-red-500 dfocus:ring-2">
@@ -742,16 +728,9 @@
 <script>
 import AppLayout from '@/Layouts/AppLayoutapp2.vue';
 import Swal from "sweetalert2";
-import { Icon } from '@iconify/vue';
-import Toggle from '@vueform/toggle';
 import '@vueform/toggle/themes/default.css';
 import Button from "../../Jetstream/Button";
-import moment from 'moment'
-import { QuillEditor } from '@vueup/vue-quill';
-import '@vueup/vue-quill/dist/vue-quill.snow.css';
-import { ref, onMounted } from 'vue';
 import { Money3Component } from 'v-money3'
-import {Head, Link, usePage} from '@inertiajs/inertia-vue3';
 import JetNavLink from '@/Jetstream/NavLink.vue';
 import NavLink from "../../Jetstream/NavLink";
 import Input from "../../Jetstream/Input";
@@ -767,17 +746,12 @@ export default {
         NavLink,
         Button,
         AppLayout,
-        Icon,
-        Toggle,
-        QuillEditor,
         JetNavLink,
-        Link,
         money3: Money3Component,
         Multiselect,
-        SemipolarSpinner
+        SemipolarSpinner,
     },
     props:{
-        users : [],
         errors: Object,
         Vendedor: 0,
         localidad: 0,
@@ -801,8 +775,6 @@ export default {
             loading: false,
             pqvoz: [],
             pqtv: [],
-            //segmento: '',
-            //tipocliente: '',
             activeTab: '',
             navState: 'facturacion',
             isOpenModalDirInsta: false,
@@ -814,12 +786,6 @@ export default {
             isValidateautorizacion: false,
             tituloModal: '',
             wifiselect: '',
-            formpasswd: {
-                _token: usePage().props.value._token,
-                id: '',
-                password: '',
-                password_confirmation: '',
-            },
             cliente: {
                 SUBSCRIBER_ID: 0,
                 NOMBRE: '',
@@ -928,15 +894,7 @@ export default {
                 case 'dircobro':
                     this.isOpenModalDirfact = false;
                     break;
-                //this.reset();
-                //this.editMode = false;
-                //this.verMode  = false;
-                //this.$page.props.errors = [];
             }
-        },
-        closeModalPass: function () {
-            this.isOpencambiopass = false
-            this.$page.props.errors.updatePassword = null;
         },
         reset: function () {
             this.cliente.NOMBRE = '';
@@ -1047,6 +1005,110 @@ export default {
             this.errors.MED_RED_SOCIAL = null;
             this.errors.VENDEDOR = null;
         },
+        resetcliente: function () {
+            this.cliente.NOMBRE = '';
+            this.cliente.APELLIDO = '';
+            this.cliente.IDENTIFICACION = '';
+            this.cliente.TIPO_IDENT = 0;
+            this.cliente.TIPO_CLIENTE = 0;
+            this.cliente.SEGMENTO = 0;
+            this.cliente.TELEFONO = '';
+            this.cliente.DIRECCION = '';
+            this.cliente.NOMBRE_CONTACT = '';
+            this.cliente.TEL_CONTACT = '';
+            this.cliente.DIR_CONTACT = '';
+            this.cliente.EMAIL = '';
+            this.cliente.TEL_MOVIL = '';
+            this.cliente.CANT_EMPLEADOS = 0;
+            this.cliente.CANT_SUCURSALES = 0;
+            this.cliente.CANT_PC = 0;
+            this.cliente.MEDIO_RECEPCION = 0;
+            this.cliente.ID_LLAMADA = 0;
+            this.cliente.AUTORIZA = false;
+            this.cliente.MED_ESCRITO = false;
+            this.cliente.MED_SMS = false;
+            this.cliente.MED_EMAIL = false;
+            this.cliente.MED_TELEMERCADEO = false;
+            this.cliente.MED_RED_SOCIAL = false;
+            this.cliente.VENDEDOR = false;
+
+            this.form.NOMBRE = '';
+            this.form.APELLIDO = '';
+            this.form.SEGMENTO = 0;
+            this.form.CICLO = 0;
+            this.form.INC_VOZ = 0;
+            this.form.INC_INT = 0;
+            this.form.INC_TV = 0;
+            this.form.EMPAQUETAR = 0;
+            this.form.PLAN_CCIAL_LB = 0;
+            this.form.PLAN_VTA_LB = 0;
+            this.form.APL_DCTO_LB = 'N';
+            this.form.PLAN_CCIAL_INT = 0;
+            this.form.PLAN_VTA_INT = 0;
+            this.form.APL_DCTO_INT = 'N';
+            this.form.PLAN_CCIAL_TV = 0;
+            this.form.PLAN_VTA_TV = 0;
+            this.form.APL_DCTO_TV = 'N';
+            this.form.TECNOLOGIA = 0;
+            this.form.ESTRATO = 0;
+            this.form.LOCALIDAD = 0;
+            this.form.DIRECCION = '';
+            this.form.BARRIO = 0;
+            this.form.LOCALIDAD_COBR = 0;
+            this.form.DIRECCION_COBR = '';
+            this.form.BARRIO_COBR = 0;
+            this.form.PROD_BASE = '';
+            this.form.PAQUETE_SS = 0;
+            this.form.RETRICCION = '';
+            this.form.VELOCIDAD = 0;
+            this.form.PAQ_TELEVISION = '';
+            this.form.DECOS_ST = 0;
+            this.form.DECOS_HD = 0;
+            this.form.VENDEDOR = 0;
+            this.form.PRODUCTO_BASE = '';
+            this.form.COOR_X = 0;
+            this.form.COOR_Y = 0;
+            this.form.OBSERVACIONES = '';
+            this.form.SECTOR = '';
+            this.form.CONTADOR = '';
+            this.form.DTH = 0;
+            this.form.NUMERO_PRIVADO = 0;
+            this.form.WIFIPROINCLUIDO = 0;
+            this.form.WIFIPROARRIENDO = 0;
+            this.form.WIFIPROFIDELIZA = 0;
+            this.form.COMPLEMENTO_DIRECCION_CBR = '';
+            this.form.COMPLEMENTO_DIRECCION_INST = '';
+
+            this.errorcreacion = false;
+            this.navState = 'facturacion';
+            this.isValidategeneral = false;
+
+            this.errors.NOMBRE = null;
+            this.errors.APELLIDO = null;
+            this.errors.IDENTIFICACION = null;
+            this.errors.TIPO_IDENT = null;
+            this.errors.TIPO_CLIENTE = null;
+            this.errors.SEGMENTO = null;
+            this.errors.TELEFONO = null;
+            this.errors.DIRECCION = null;
+            this.errors.NOMBRE_CONTACT = null;
+            this.errors.TEL_CONTACT = null;
+            this.errors.DIR_CONTACT = null;
+            this.errors.EMAIL = null;
+            this.errors.TEL_MOVIL = null;
+            this.errors.CANT_EMPLEADOS = null;
+            this.errors.CANT_SUCURSALES = null;
+            this.errors.CANT_PC = null;
+            this.errors.MEDIO_RECEPCION = null;
+            this.errors.ID_LLAMADA = null;
+            this.errors.AUTORIZA = null;
+            this.errors.MED_ESCRITO = null;
+            this.errors.MED_SMS = null;
+            this.errors.MED_EMAIL = null;
+            this.errors.MED_TELEMERCADEO = null;
+            this.errors.MED_RED_SOCIAL = null;
+            this.errors.VENDEDOR = null;
+        },
         crearDireccion: async function (opcion, direccion, barrio) {
             this.loading = true;
             let statuserror = true;
@@ -1059,15 +1121,6 @@ export default {
                 this.errors.DIRECCION = null;
             }
 
-            /*
-            if (this.form.BARRIO == 0) {
-                statuserror =  false;
-                this.errors.BARRIO = 'Seleccione un barrio';
-            } else {
-                this.errors.BARRIO = null;
-            }
-            */
-
             if (!statuserror) {
                 Swal.fire({
                     icon: 'warning',
@@ -1077,7 +1130,6 @@ export default {
                 return false;
             }
 
-            console.log('creación de dirección de instalación');
             let res;
             try {
                 res = await axios.get(url, {
@@ -1088,13 +1140,10 @@ export default {
                 });
             } catch (error) {
                 console.log(error);
-                return false;
             }
 
             let resultado = res.data;
-
             if (resultado.id != '' && resultado.id != null && resultado.id > 0) {
-                console.log(res.data);
                 this.closeModal('dirinsta');
                 this.closeModal('dircobro');
             } else {
@@ -1103,7 +1152,6 @@ export default {
                     title: 'La dirección no puede ser utilizada',
                     showConfirmButton: true,
                 })
-                console.log(res.data);
             }
             this.loading = false;
         },
@@ -1185,11 +1233,8 @@ export default {
                 } else {
                     this.errors.PLAN_VTA_LB = null;
                 }
-                if (this.pqvoz.length > 0) {
-                    this.form.PAQUETE_SS = this.pqvoz[0];
-                    for(let i = 1; i < this.pqvoz.length; i++) {
-                        this.form.PAQUETE_SS += ','+this.pqvoz[i];
-                    }
+                if (this.form.PAQUETE_SS == 0) {
+                    this.form.PAQUETE_SS = '';
                 }
             }
             if (this.form.INC_INT) {
@@ -1289,9 +1334,7 @@ export default {
                 document.documentElement.scrollTop = 0;
             });
 
-            console.log('creación de solicitud de venta');
             this.loading = true;
-
             let res;
             try {
                 res = await axios.get('/venta/store', {
@@ -1300,20 +1343,17 @@ export default {
                     }
                 });
             } catch (error) {
-                console.log(error);
                 this.loading = false;
                 return false;
             }
 
             let resultado = res.data;
-
             if (resultado.codigo == 0 && resultado.solicitud > 0) {
                 Swal.fire({
                     icon: 'success',
                     title: 'La solicitud ' + resultado.solicitud + ' ha sido registrada satisfactoriamente',
                     showConfirmButton: true,
                 })
-                console.log(res.data);
                 this.reset();
             } else {
                 Swal.fire({
@@ -1322,7 +1362,6 @@ export default {
                     showConfirmButton: true,
                 })
                 this.errorcreacion = resultado.mensaje;
-                console.log(res.data);
             }
             this.loading = false;
         },
@@ -1336,7 +1375,6 @@ export default {
                 })
             } else {
                 this.loading = true;
-                console.log('consultar cliente');
                 let res;
                 try {
                     res = await axios.get('/cliente/getCliente', {
@@ -1347,11 +1385,9 @@ export default {
                         }
                     });
                 } catch (error) {
-                    console.log(error);
                     this.loading = false;
                     return false;
                 }
-                console.log(res.data.data);
                 if (res.data.data != null) {
                     if (res.data.data[0].SUBSCRIBER_ID > 0) {
                         this.cliente = res.data.data[0];
@@ -1367,6 +1403,9 @@ export default {
                             showConfirmButton: false,
                             timer: 1500
                         })
+                        this.resetcliente();
+                        this.segmento = '';
+                        this.tipocliente = '';
                     }
                 } else {
                     Swal.fire({
@@ -1375,6 +1414,9 @@ export default {
                         showConfirmButton: false,
                         timer: 1500
                     })
+                    this.resetcliente();
+                    this.segmento = '';
+                    this.tipocliente = '';
                 }
                 this.loading = false;
             }
@@ -1486,13 +1528,8 @@ export default {
         },
         getComercialPlan: async function (producto) {
             this.loading = true;
-            console.log('loading...');
             if (this.form.EMPAQUETAR) {
-                console.log('consultar plan comercial');
                 let res;
-                console.log('INC_VOZ ' + this.form.INC_VOZ);
-                console.log('INC_INT ' + this.form.INC_INT);
-                console.log('INC_TV ' + this.form.INC_TV);
                 try {
                     res = await axios.get('/venta/getComercialPlan', {
                         params: {
@@ -1507,11 +1544,9 @@ export default {
                         }
                     });
                 } catch (error) {
-                    console.log(error);
                     this.loading = false;
                     return false;
                 }
-                console.log(res.data);
                 this.arrayPlanesComVoz = [];
                 this.arrayPlanesComTv = [];
                 this.arrayPlanesComInternet = [];
@@ -1541,7 +1576,6 @@ export default {
         },
         getComercialPlanInd: async function (producto) {
             this.loading = true;
-            console.log('consultar plan comercial');
             let res;
             try {
                 res = await axios.get('/venta/getComercialPlanInd', {
@@ -1553,11 +1587,9 @@ export default {
                     }
                 });
             } catch (error) {
-                console.log(error);
                 this.loading = false;
                 return false;
             }
-            console.log(res.data);
             switch (producto) {
                 case 'voz':
                     this.arrayPlanesComVoz = [];
@@ -1582,7 +1614,6 @@ export default {
             this.loading = false;
         },
         getSalesPlan: async function (plancomercial, opcion) {
-            console.log('consultar plan venta');
             this.loading = true;
             let res;
             try {
@@ -1592,11 +1623,9 @@ export default {
                     }
                 });
             } catch (error) {
-                console.log(error);
                 this.loading = false;
                 return false;
             }
-            console.log(res.data);
             switch (opcion) {
                 case 'voz':
                     this.arrayPlanesVentaVoz = res.data.planes;
@@ -1613,7 +1642,6 @@ export default {
         },
 
         getVelocidades: async function (plancomercial) {
-            console.log('consultar velocidad');
             this.loading = true;
             let res;
             try {
@@ -1623,12 +1651,10 @@ export default {
                     }
                 });
             } catch (error) {
-                console.log(error);
                 this.loading = false;
                 return false;
             }
             this.loading = false;
-            console.log(res.data);
             this.arrayVelocidadesInt = res.data.planes;
         },
 
@@ -1636,15 +1662,12 @@ export default {
             switch (option) {
                 case 'voz':
                     this.activeTab = 'voz';
-                    //this.getComercialPlan('voz');
                     break;
                 case 'tv':
                     this.activeTab = 'tv';
-                    //this.getComercialPlan('tv');
                     break;
                 case 'internet':
                     this.activeTab = 'internet';
-                    //this.getComercialPlan('internet');
                     break;
             }
         },

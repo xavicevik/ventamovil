@@ -12,18 +12,13 @@ use Inertia\Inertia;
 
 class ClienteController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function getCliente(Request $request)
     {
         $url = config('edatel.serviceurl');
         $response = Http::retry(3, 100)->timeout(60)->withOptions(['verify' => false,])
             ->asForm()
             ->post($url, [
-                "ListaVal" => 'c0nsult4Ct3',
+                "ListaVal" => config('edatel.consultacliente'),
                 "TIPO_IDENT" => $request->tipoident,
                 "TIPO_CTE" => $request->tipocliente,
                 "IDENTIFICACION" => $request->identificacion
@@ -42,11 +37,7 @@ class ClienteController extends Controller
             'tipocliente' => $tipocliente?$tipocliente->DESCRIPCION:''
             ];
     }
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create(Request $request)
     {
         $vendedor = $request->session()->get('Vendedor');
@@ -57,12 +48,6 @@ class ClienteController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $datos = json_decode($request->Xmlcliente);
@@ -76,7 +61,7 @@ class ClienteController extends Controller
         $response = Http::retry(3, 100)->timeout(60)->withOptions(['verify' => false,])
             ->asForm()
             ->post($url, [
-                "ListaVal" => 'cr34cl13nt3',
+                "ListaVal" => config('edatel.crearcliente'),
                 "Xmlcliente" => $Xmlcliente
             ]);
 
@@ -95,7 +80,7 @@ class ClienteController extends Controller
         $response = Http::retry(3, 100)->timeout(60)->withOptions(['verify' => false,])
             ->asForm()
             ->post($url, [
-                "ListaVal" => 'l1574_C0nt4V3l',
+                "ListaVal" => config('edatel.listacontratos'),
                 "Filtro" => $request->contrato
             ]);
 
@@ -112,7 +97,7 @@ class ClienteController extends Controller
         $response = Http::retry(3, 100)->timeout(60)->withOptions(['verify' => false,])
             ->asForm()
             ->post($url, [
-                "ListaVal" => 'c0nsult4Pr0d',
+                "ListaVal" => config('edatel.consultaprod'),
                 "Filtro" => $request->contrato
             ]);
 
@@ -124,7 +109,7 @@ class ClienteController extends Controller
         $response2 = Http::retry(3, 100)->timeout(60)->withOptions(['verify' => false,])
             ->asForm()
             ->post($url, [
-                "ListaVal" => 'c0nsult4M0t1v0S0l',
+                "ListaVal" => config('edatel.consultamotivos'),
                 "Filtro" => $request->contrato
             ]);
 
@@ -163,8 +148,5 @@ class ClienteController extends Controller
             'status' => $response->status()
         ];
     }
-
-
-
 
 }

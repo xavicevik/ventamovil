@@ -1,26 +1,8 @@
 <template>
-    <AppLayout title="Clientes" :Vendedor="Vendedor" :localidad="localidad" :localidaddesc="localidaddesc">
+    <AppLayout title="Ventas" :Vendedor="Vendedor" :localidad="localidad" :localidaddesc="localidaddesc">
         <template #header>
 
         </template>
-
-        <div class="w-full px-0 rounded-lg sm:px-4">
-            <!-- Mobile sub header -->
-            <div
-                class="flex items-center justify-between p-2 bg-white rounded-md text-sm shadow-lg top-16 left-5 right-5"
-            >
-                <!-- Seetings button -->
-                <a href="#facturacion">
-                    <button
-                        class="p-2 text-white bg-red-600 rounded-lg shadow-md hover:text-white hover:bg-blue-700 focus:outline-none focus:ring focus:ring-white focus:ring-offset-gray-100 focus:ring-offset-4"
-                        :class="{'text-white bg-blue-700': navState == 'facturacion'}"
-                    >
-                        <span class="">Cambio de velocidad</span>
-
-                    </button>
-                </a>
-            </div>
-        </div>
         <section>
             <div @click="cleanMessage()" mx-auto class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md my-3" role="alert" v-show="errorcreacion">
                 <div class="flex">
@@ -163,12 +145,10 @@
                                 </div>
                             </section>
 
-
                     </div>
                 </div>
             </section>
             <!-- Fin Ventana modal de loading -->
-
 
         </div>
     </AppLayout>
@@ -177,20 +157,11 @@
 <script>
 import AppLayout from '@/Layouts/AppLayoutapp2.vue';
 import Swal from "sweetalert2";
-import { Icon } from '@iconify/vue';
-import Toggle from '@vueform/toggle';
 import '@vueform/toggle/themes/default.css';
 import Button from "../../Jetstream/Button";
-import { QuillEditor } from '@vueup/vue-quill';
-import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import { Money3Component } from 'v-money3'
-import {Head, Link, usePage} from '@inertiajs/inertia-vue3';
-import JetNavLink from '@/Jetstream/NavLink.vue';
 import NavLink from "../../Jetstream/NavLink";
 import Input from "../../Jetstream/Input";
-
-import Multiselect from '@vueform/multiselect'
-
 import { SemipolarSpinner } from 'epic-spinners'
 
 export default {
@@ -200,17 +171,10 @@ export default {
         NavLink,
         Button,
         AppLayout,
-        Icon,
-        Toggle,
-        QuillEditor,
-        JetNavLink,
-        Link,
         money3: Money3Component,
-        Multiselect,
         SemipolarSpinner
     },
     props:{
-        users : [],
         errors: Object,
         Vendedor: 0,
         localidad: 0,
@@ -245,7 +209,7 @@ export default {
             this.form.PRODUCTID = '';
             this.form.DESCRIPCION = '';
             this.form.VELOCIDAD = 0;
-            this.form.PLAN_CCIAL_INT = 0,
+            this.form.PLAN_CCIAL_INT = 0;
             this.form.VELOCIDAD_NEW = 0;
             this.form.PLANFACT = 0;
 
@@ -258,8 +222,26 @@ export default {
             this.errors.VELOCIDAD_NEW = 0;
             this.errors.PLANFACT = 0;
         },
+        reset2: function () {
+            this.form.NOMBRE = '';
+            this.form.PRODUCTID = '';
+            this.form.DESCRIPCION = '';
+            this.form.VELOCIDAD = 0;
+            this.form.PLAN_CCIAL_INT = 0;
+            this.form.VELOCIDAD_NEW = 0;
+            this.form.PLANFACT = 0;
 
+            this.errors.SUBSCRIPTIONID = '';
+            this.errors.NOMBRE = '';
+            this.errors.PRODUCTID = '';
+            this.errors.DESCRIPCION = '';
+            this.errors.VELOCIDAD = 0;
+            this.errors.PLAN_CCIAL_INT = 0;
+            this.errors.VELOCIDAD_NEW = 0;
+            this.errors.PLANFACT = 0;
 
+            this.arrayProductos = [];
+        },
         save: async function (form) {
             let statuserror = true;
             this.isValidategeneral = false;
@@ -305,7 +287,6 @@ export default {
                 document.documentElement.scrollTop = 0;
             });
 
-            console.log('creación de solicitud de cambio de velocidad');
             this.loading = true;
             let res;
             try {
@@ -316,7 +297,6 @@ export default {
                     }
                 });
             } catch (error) {
-                console.log(error);
                 this.loading = false;
                 return false;
             }
@@ -329,7 +309,6 @@ export default {
                     title: 'La solicitud ' + resultado.solicitud + ' ha sido registrada satisfactoriamente',
                     showConfirmButton: true,
                 })
-                console.log(res.data);
                 this.reset();
             } else {
                 Swal.fire({
@@ -338,13 +317,11 @@ export default {
                     showConfirmButton: true,
                 })
                 this.errorcreacion = resultado.mensaje;
-                console.log(res.data);
             }
             this.loading = false;
         },
         getContrato: async function (contrato) {
             this.loading = true;
-            console.log('consultar contrato');
             let res;
             try {
                 res = await axios.get('/cliente/getContrato', {
@@ -354,10 +331,8 @@ export default {
                 });
             } catch (error) {
                 this.loading = false;
-                console.log(error);
                 return false;
             }
-            console.log(res.data.data);
             if (res.data.data != null) {
                 this.form = res.data.contrato;
                 this.arrayProductos = res.data.data;
@@ -368,12 +343,11 @@ export default {
                     title: 'No se encontró producto de Internet para el contrato',
                     showConfirmButton: true
                 })
+                this.reset2();
             }
             this.loading = false;
         },
-
         getVelocidadesCambio: async function (planfact) {
-            console.log('consultar velocidad cambio');
             this.loading = true;
             let res;
             try {
@@ -384,10 +358,8 @@ export default {
                 });
             } catch (error) {
                 this.loading = false;
-                console.log(error);
                 return false;
             }
-            console.log(res.data);
             this.loading = false;
             this.arrayVelocidadesInt = res.data.velocidades;
         },
@@ -401,4 +373,3 @@ export default {
     },
 }
 </script>
-<style src="@vueform/multiselect/themes/default.css"></style>
