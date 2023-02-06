@@ -495,6 +495,30 @@
                 </div>
 
             </div>
+
+            <!-- Ventana modal dirección de loading -->
+            <!-- Main modal -->
+            <section> <!-- Ventana modal -->
+                <div class="fixed z-10 inset-0 overflow-y-auto ease-out duration-400" v-if="loading">
+                    <div class="items-end justify-center min-h-screen pt-10 px-2 pb-20 text-center sm:block sm:p-0">
+
+                        <div class="fixed inset-0 transition-opacity">
+                            <div class="absolute inset-0 bg-gray-400 opacity-75"></div>
+                        </div>
+
+                        <!-- This element is to trick the browser into centering the modal contents. -->
+                        <span class="hidden inline-block align-middle h-screen"></span>
+                        <section>
+                            <div class=" mt-10 w-full" id="app">
+                                <semipolar-spinner class="mt-10 mx-auto" :animation-duration="2000" :size="85" color="#ff1d5e" />
+                            </div>
+                        </section>
+
+
+                    </div>
+                </div>
+            </section>
+            <!-- Fin Ventana modal dirección de loading -->
         </div>
     </AppLayout>
 </template>
@@ -502,19 +526,12 @@
 <script>
 import AppLayout from '@/Layouts/AppLayoutapp2.vue';
 import Swal from "sweetalert2";
-import { Icon } from '@iconify/vue';
 import Toggle from '@vueform/toggle';
 import '@vueform/toggle/themes/default.css';
 import Button from "../../Jetstream/Button";
-import moment from 'moment'
-import { QuillEditor } from '@vueup/vue-quill';
-import '@vueup/vue-quill/dist/vue-quill.snow.css';
-import { ref, onMounted } from 'vue';
-import { Money3Component } from 'v-money3'
-import {Head, Link, usePage} from '@inertiajs/inertia-vue3';
-import JetNavLink from '@/Jetstream/NavLink.vue';
 import NavLink from "../../Jetstream/NavLink";
 import Input from "../../Jetstream/Input";
+import { SemipolarSpinner } from 'epic-spinners'
 
 export default {
 
@@ -523,16 +540,10 @@ export default {
         NavLink,
         Button,
         AppLayout,
-        Icon,
         Toggle,
-        QuillEditor,
-        JetNavLink,
-        Link,
-        money3: Money3Component,
-
+        SemipolarSpinner
     },
     props:{
-        users : [],
         errors: Object,
         Vendedor: 0
     },
@@ -541,19 +552,13 @@ export default {
     },
     data() {
         return {
+            loading: false,
             navState: 'general',
             errorcreacion: '',
             isValidategeneral: false,
             isValidatereferencias: false,
             isValidateempresa: false,
             isValidateautorizacion: false,
-            tituloModal: '',
-            formpasswd: {
-                _token: usePage().props.value._token,
-                id: '',
-                password: '',
-                password_confirmation: '',
-            },
             form: {
                 NOMBRE: '',
                 APELLIDO: '',
@@ -592,18 +597,7 @@ export default {
         }
     },
     methods: {
-        openModal: function (accion, data = []) {
-            this.isOpen = true;
-        },
-        closeModal: function () {
-            this.isOpen = false;
-            this.reset();
-            this.editMode = false;
-            this.verMode  = false;
-            this.$page.props.errors = [];
-        },
         reset: function () {
-            this.tituloModal = '';
             this.form.NOMBRE = '';
             this.form.APELLIDO = '';
             this.form.IDENTIFICACION = '';
@@ -633,8 +627,84 @@ export default {
             this.errorcreacion = false;
             this.navState = 'general';
             this.isValidategeneral = false;
-            this.errors = [];
+
+            this.errors.NOMBRE = null;
+            this.errors.APELLIDO = null;
+            this.errors.IDENTIFICACION = null;
+            this.errors.TIPO_IDENT = null;
+            this.errors.TIPO_CLIENTE = null;
+            this.errors.SEGMENTO = null;
+            this.errors.TELEFONO = null;
+            this.errors.DIRECCION = null;
+            this.errors.NOMBRE_CONTACT = null;
+            this.errors.TEL_CONTACT = null;
+            this.errors.DIR_CONTACT = null;
+            this.errors.EMAIL = null;
+            this.errors.TEL_MOVIL = null;
+            this.errors.CANT_EMPLEADOS = null;
+            this.errors.CANT_SUCURSALES = null;
+            this.errors.CANT_PC = null;
+            this.errors.MEDIO_RECEPCION = null;
+            this.errors.ID_LLAMADA = null;
+            this.errors.AUTORIZA = null;
+            this.errors.MED_ESCRITO = null;
+            this.errors.MED_SMS = null;
+            this.errors.MED_EMAIL = null;
+            this.errors.MED_TELEMERCADEO = null;
+            this.errors.MED_RED_SOCIAL = null;
+            this.errors.VENDEDOR = null;
         },
+        reset2: function () {
+            this.form.NOMBRE = '';
+            this.form.APELLIDO = '';
+            this.form.SEGMENTO = 0;
+            this.form.TELEFONO = '';
+            this.form.DIRECCION = '';
+            this.form.NOMBRE_CONTACT = '';
+            this.form.TEL_CONTACT = '';
+            this.form.DIR_CONTACT = '';
+            this.form.EMAIL = '';
+            this.form.TEL_MOVIL = '';
+            this.form.CANT_EMPLEADOS = 0;
+            this.form.CANT_SUCURSALES = 0;
+            this.form.CANT_PC = 0;
+            this.form.MEDIO_RECEPCION = 0;
+            this.form.ID_LLAMADA = 0;
+            this.form.AUTORIZA = false;
+            this.form.MED_ESCRITO = false;
+            this.form.MED_SMS = false;
+            this.form.MED_EMAIL = false;
+            this.form.MED_TELEMERCADEO = false;
+            this.form.MED_RED_SOCIAL = false;
+            this.form.VENDEDOR = false;
+
+            this.errors.NOMBRE = null;
+            this.errors.APELLIDO = null;
+            this.errors.IDENTIFICACION = null;
+            this.errors.TIPO_IDENT = null;
+            this.errors.TIPO_CLIENTE = null;
+            this.errors.SEGMENTO = null;
+            this.errors.TELEFONO = null;
+            this.errors.DIRECCION = null;
+            this.errors.NOMBRE_CONTACT = null;
+            this.errors.TEL_CONTACT = null;
+            this.errors.DIR_CONTACT = null;
+            this.errors.EMAIL = null;
+            this.errors.TEL_MOVIL = null;
+            this.errors.CANT_EMPLEADOS = null;
+            this.errors.CANT_SUCURSALES = null;
+            this.errors.CANT_PC = null;
+            this.errors.MEDIO_RECEPCION = null;
+            this.errors.ID_LLAMADA = null;
+            this.errors.AUTORIZA = null;
+            this.errors.MED_ESCRITO = null;
+            this.errors.MED_SMS = null;
+            this.errors.MED_EMAIL = null;
+            this.errors.MED_TELEMERCADEO = null;
+            this.errors.MED_RED_SOCIAL = null;
+            this.errors.VENDEDOR = null;
+        },
+
 
         save: async function (Xmlcliente) {
             if (this.form.AUTORIZA== null ||this.form.AUTORIZA == '') {
@@ -687,8 +757,6 @@ export default {
                 })
                 return false;
             }
-
-            console.log('creación de cliente');
             this.loading = true;
             let res;
             try {
@@ -698,7 +766,6 @@ export default {
                     }
                 });
             } catch (error) {
-                console.log(error);
                 this.loading = false;
                 return false;
             }
@@ -712,7 +779,6 @@ export default {
                     showConfirmButton: false,
                     timer: 2000
                 })
-                console.log(res.data);
                 this.reset();
             } else {
                 Swal.fire({
@@ -721,12 +787,10 @@ export default {
                     showConfirmButton: true,
                 })
                 this.errorcreacion = resultado.mensaje;
-                console.log(res.data);
             }
             this.loading = false;
         },
         getCliente: async function (tipocliente, tipoident, identificacion) {
-            console.log('consultar cliente');
             this.loading = true;
             let res;
             try {
@@ -738,21 +802,27 @@ export default {
                     }
                 });
             } catch (error) {
-                console.log(error);
                 this.loading = false;
                 return false;
             }
-            console.log(res.data.data[0]);
             if (res.data.data) {
                 if (res.data.data[0].SUBSCRIBER_ID > 0) {
                     this.form = res.data.data[0];
                     Swal.fire({
-                        icon: 'success',
+                        icon: 'warning',
                         title: 'El cliente ya existe',
                         showConfirmButton: false,
                         timer: 1500
                     })
                 }
+            } else {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'El cliente no existe',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                this.reset2();
             }
             this.loading = false;
         },

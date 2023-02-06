@@ -28,7 +28,6 @@ Route::group(['middleware'=>['guest']],function(){
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified',])->group(function () {
     Route::get('/main', [PrincipalController::class, 'index'])->name('main.index');
-    Route::get('/cliente', [ClienteController::class, 'index'])->name('cliente.index');
     Route::get('/cliente.crear', [ClienteController::class, 'create'])->name('cliente.create');
     Route::post('/cliente/store', [ClienteController::class, 'store'])->name('cliente.store');
     Route::get('/cliente/store', [ClienteController::class, 'store'])->name('cliente.store');

@@ -2,37 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cliente;
 use App\Models\Rifa;
-use App\Models\Rol;
 use App\Models\Segmentos;
 use App\Models\TiposCliente;
-use App\Models\User;
 use App\Models\Vendedor;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
-use function PHPUnit\Framework\isNull;
 
 class ClienteController extends Controller
 {
-    const canPorPagina = 20;
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
-    {
-        $vendedor = $request->session()->get('Vendedor');
-        $identificacion = $request->session()->get('Identificacion');
-        return Inertia::render('Clientes/Index', ['Vendedor' => $vendedor[0], 'Identificacion' => $identificacion[0]]);
-    }
-
     public function getCliente(Request $request)
     {
         $url = config('edatel.serviceurl');

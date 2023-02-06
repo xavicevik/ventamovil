@@ -61,7 +61,6 @@ export default {
                     departamento: departamento,
                 }
             });
-            console.log(res);
             let respuesta = res.data;
             this.arrayLocalidades = respuesta.data;
         }
