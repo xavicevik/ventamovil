@@ -15,16 +15,6 @@ use \App\Models\Rol;
 use \App\Models\Terminosycondiciones;
 use App\Exports\ProductsExport;
 use Maatwebsite\Excel\Facades\Excel;
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
 
 Route::group(['middleware'=>['guest']],function(){
 
@@ -37,7 +27,6 @@ Route::group(['middleware'=>['guest']],function(){
 });
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified',])->group(function () {
-    // Tigo UNE
     Route::get('/main', [PrincipalController::class, 'index'])->name('main.index');
     Route::get('/cliente', [ClienteController::class, 'index'])->name('cliente.index');
     Route::get('/cliente.crear', [ClienteController::class, 'create'])->name('cliente.create');
@@ -49,15 +38,10 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified',]
     Route::get('/master/getRestricciones', [MasterController::class, 'getRestricciones'])->name('master.getRestricciones');
     Route::get('/venta/getVelocidades', [VentaController::class, 'getVelocidades'])->name('venta.getVelocidades');
 
-
     Route::get('/cliente/getCliente', [ClienteController::class, 'getCliente'])->name('master.getCliente');
     Route::get('/master/getBarrioLocalidad', [MasterController::class, 'getBarrioLocalidad'])->name('master.getBarrioLocalidad');
     Route::post('/direccion/storeDirInsta', [VentaController::class, 'storeDirInsta'])->name('direccion.storeDirInsta');
     Route::get('/direccion/storeDirInsta', [VentaController::class, 'storeDirInsta'])->name('direccion.storeDirInsta');
-
-
-    //Route::get('/master/getDepartamentos', [MasterController::class, 'getDepartamentos'])->name('master.getDepartamentos');
-    //Route::get('/master/getLocalidadDepartamento', [MasterController::class, 'getLocalidadDepartamento'])->name('master.getLocalidadDepartamento');
 
     // Registro de venta
     Route::get('/venta', [VentaController::class, 'index'])->name('venta.index');
@@ -73,7 +57,6 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified',]
     Route::get('/velocidad.cambio', [VentaController::class, 'changeSpeed'])->name('velocidad.changeSpeed');
     Route::get('/velocidad/store', [VentaController::class, 'storeSpeed'])->name('velocidad.storeSpeed');
     Route::post('/velocidad/store', [VentaController::class, 'storeSpeed'])->name('velocidad.storeSpeed');
-
     Route::get('/velocidad/getContrato', [VentaController::class, 'getContrato'])->name('velocidad.getContrato');
     Route::get('/velocidad/getProductVoz', [VentaController::class, 'getProductVoz'])->name('velocidad.getProductVoz');
     Route::get('/cliente/getContrato', [ClienteController::class, 'getContrato'])->name('master.getContrato');
@@ -89,11 +72,6 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified',]
     Route::get('/solicitudes', [VentaController::class, 'solicitudes'])->name('solicitudes');
     Route::get('/solicitudes/consultar', [VentaController::class, 'getsolicitudes'])->name('getsolicitudes');
     Route::get('/solicitudes/detalles', [VentaController::class, 'getDetallesolicitudes'])->name('getDetallesolicitudes');
-
-
-
-
-    //TIgo UNE
 
 });
 
