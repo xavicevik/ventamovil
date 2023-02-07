@@ -185,7 +185,7 @@ class VentaController extends Controller
         $response = Http::retry(3, 100)->timeout(60)->withOptions(['verify' => false,])
             ->asForm()
             ->post($url, [
-                "ListaVal" => 'r3g1str4v3nt4',
+                "ListaVal" => config('edatel.registrarventa'),
                 "XmlVenta" => $XmlVenta
             ]);
 
@@ -208,7 +208,7 @@ class VentaController extends Controller
             ->asForm()
             ->post($url, [
                 "inuLocalidad" => $localidad[0],
-                "ListaVal" => 'cr34D1r3cc10n',
+                "ListaVal" => config('edatel.creadireccion'),
                 "isbDireccion" => $request->isbDireccion,
                 "inuBarrio" => $request->inuBarrio==0?null:$request->inuBarrio
             ]);
@@ -240,7 +240,7 @@ class VentaController extends Controller
         $response = Http::retry(3, 100)->timeout(60)->withOptions(['verify' => false,])
             ->asForm()
             ->post($url, [
-                "ListaVal" => 'l1574_Pl4nC14l',
+                "ListaVal" => config('edatel.planescomerciales'),
                 "Filtro" => json_encode($filtro)
             ]);
 
@@ -286,7 +286,7 @@ class VentaController extends Controller
         $response = Http::retry(3, 100)->timeout(60)->withOptions(['verify' => false,])
             ->asForm()
             ->post($url, [
-                "ListaVal" => 'l1574_Pl4nC14l',
+                "ListaVal" => config('edatel.listaplanes'),
                 "Filtro" => json_encode($filtro)
             ]);
 
@@ -305,7 +305,7 @@ class VentaController extends Controller
         $response = Http::retry(3, 100)->timeout(60)->withOptions(['verify' => false,])
             ->asForm()
             ->post($url, [
-                "ListaVal" => 'l1574_Pl4nV3nt4',
+                "ListaVal" => config('edatel.planesventa'),
                 "Filtro" => json_encode($filtro)
             ]);
 
@@ -322,7 +322,7 @@ class VentaController extends Controller
         $response = Http::retry(3, 100)->timeout(60)->withOptions(['verify' => false,])
             ->asForm()
             ->post($url, [
-                "ListaVal" => 'l1574_Cl4s3Svc10',
+                "ListaVal" => config('edatel.clasesserv'),
                 "Filtro" => json_encode($filtro)
             ]);
 
@@ -335,7 +335,7 @@ class VentaController extends Controller
         $response = Http::retry(3, 100)->timeout(60)->withOptions(['verify' => false,])
             ->asForm()
             ->post($url, [
-                "ListaVal" => 'C0nsu_Cl4s_V3l0',
+                "ListaVal" => config('edatel.consultavel'),
                 "PLAN_ACTUAL" => $request->PLANFACT
             ]);
 
@@ -355,7 +355,7 @@ class VentaController extends Controller
         $response = Http::retry(3, 100)->timeout(60)->withOptions(['verify' => false,])
             ->asForm()
             ->post($url, [
-                "ListaVal" => 'R3gC4mb10V3l0c1d4d',
+                "ListaVal" => config('edatel.cambiovelocidad'),
                 "Xmlcambiovel" => $Xmlcambiovel
             ]);
 
@@ -380,7 +380,7 @@ class VentaController extends Controller
         $response = Http::retry(3, 100)->timeout(60)->withOptions(['verify' => false,])
             ->asForm()
             ->post($url, [
-                "ListaVal" => 'c0nsult4Pl4nC14lP4q',
+                "ListaVal" => config('edatel.planespaquete'),
                 "Filtro" => $Producto,
                 "Filtro2" => $Motivo,
                 "Filtro3" => $PlanCcialVoz,
@@ -388,7 +388,6 @@ class VentaController extends Controller
                 "Filtro5" => $PlanCcialTV
         ]);
 
-        //dd($response->json());
         return ['planescomm' => $response->json(), 'status' => $response->status()];
     }
 
@@ -415,11 +414,10 @@ class VentaController extends Controller
         $response = Http::retry(3, 100)->timeout(60)->withOptions(['verify' => false,])
             ->asForm()
             ->post($url, [
-                "ListaVal" => 'R3g3mp4qu4t4m13nt0',
+                "ListaVal" => config('edatel.registrapaquete'),
                 "XmlPaquete" => $XmlPaquete
         ]);
 
-        //[103974493/0/0//1]
         $result = explode("/",$response->body());
         $solicitud = $result[0];
         $cun = $result[1];
@@ -446,7 +444,7 @@ class VentaController extends Controller
         $response = Http::retry(3, 100)->timeout(60)->withOptions(['verify' => false,])
             ->asForm()
             ->post($url, [
-                "ListaVal" => 'c0nsult4vt4',
+                "ListaVal" => config('edatel.consultaventas'),
                 "Filtro" => $vendedor[0],
                 "Filtro2" => (new Carbon($request->fechainicio))->format('Y-m-d'),
                 "Filtro3" => (new Carbon($request->fechafin))->format('Y-m-d')
@@ -467,7 +465,7 @@ class VentaController extends Controller
         $response = Http::retry(3, 100)->timeout(60)->withOptions(['verify' => false,])
             ->asForm()
             ->post($url, [
-                "ListaVal" => 'c0nsult4vt4',
+                "ListaVal" => config('edatel.consultaventa'),
                 "Filtro" => $filtro,
                 "Filtro2" => (new Carbon($request->fechainicio))->format('Y-m-d'),
                 "Filtro3" => (new Carbon($request->fechafin))->format('Y-m-d')
